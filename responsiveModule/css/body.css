@@ -1,0 +1,101 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 03-dic-2019, 10:38:42
+    Author     : Cristian
+*/
+
+/*Classe per deshabilitar coses que actualment no usem pero que estan disponibles*/
+
+
+.deshabilitarComponent{
+    display:none;
+}
+#addproduct{
+    padding-top:0px !important;
+}
+.intervencioEdicioDEscripcio{
+    
+}
+
+@media screen and (min-width:1024px) {
+    .col-md-1{
+        width:8% !important;
+        float: left;
+        padding: 1%;
+        margin:0px !important;
+    }
+    .col-md-2{
+        width:16% !important;
+        float: left;
+        padding: 1%;
+        margin:0px !important;
+    }
+    .col-md-3{
+        width:24% !important;
+        float: left;
+        padding: 1%;
+        margin:0px !important;
+    }
+    .col-md-4{
+        width:32% !important;
+        float: left;
+        padding: 1%;
+        margin:0px !important;
+    }
+    .col-md-5{
+        width:40% !important;
+        float: left;
+        padding: 1%;
+        margin:0px !important;
+    }
+    .col-md-6{
+        width:48% !important;
+        float: left;
+        padding: 1%;
+        margin:0px !important;
+    }
+    .col-md-7{
+        width:56% !important;
+        float: left;
+        padding: 1%;
+        margin:0px !important;
+    }
+    .col-md-8{
+        width:64% !important;
+        float: left;
+        padding: 1%;
+        margin:0px !important;
+    }
+    .col-md-9{
+        width:72% !important;
+        float: left;
+        padding: 1%;
+        margin:0px !important;
+    }
+    .col-md-10{
+        width:80% !important;
+        float: left;
+        padding: 1%;
+        margin:0px !important;
+    }
+    .col-md-11{
+        width:88% !important;
+        float: left;
+        padding: 1%;
+        margin:0px !important;
+    }
+    .col-md-12{
+        width:96% !important;
+        float: left;
+        padding: 1%;
+        margin:0px !important;
+    }
+    .col-md-first{
+        float: none !important;
+    }
+}
+
