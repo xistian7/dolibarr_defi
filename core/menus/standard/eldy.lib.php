@@ -69,7 +69,7 @@ function print_eldy_menu($db, $atarget, $type_user, &$tabMenu, &$menu, $noout = 
     $menu_arr = array();
 
 	// Home
-	$menu_arr[] = array(
+	/*$menu_arr[] = array(
 		'name' => 'Home',
 		'link' => '/index.php?mainmenu=home&amp;leftmenu=home',
 		'title' => (!empty($conf->global->THEME_TOPMENU_DISABLE_IMAGE) ? '<span class="fa fa-home"></span>' : "Home"),
@@ -86,7 +86,7 @@ function print_eldy_menu($db, $atarget, $type_user, &$tabMenu, &$menu, $noout = 
 		'session' => (($_SESSION["mainmenu"] && $_SESSION["mainmenu"] == "home") ? 0 : 1),
 		'loadLangs' => array(),
 		'submenus' => array(),
-	);
+	);*/
 
 	// Members
 	$tmpentry = array(
@@ -502,7 +502,7 @@ function print_eldy_menu($db, $atarget, $type_user, &$tabMenu, &$menu, $noout = 
 		}*/
 		else
 		{
-			$urllogo = DOL_URL_ROOT.'/theme/dolibarr_logo_squarred_alpha.png';
+			$urllogo = DOL_URL_ROOT.'/theme/logo_menu_dolibarr.png';
 			$logoContainerAdditionalClass = '';
 		}
 		$title = $langs->trans("GoIntoSetupToChangeLogo");
@@ -511,7 +511,7 @@ function print_eldy_menu($db, $atarget, $type_user, &$tabMenu, &$menu, $noout = 
 		print_start_menu_entry('companylogo', 'class="tmenu tmenucompanylogo"', 1);
 
 
-		print '<div class="center '.$logoContainerAdditionalClass.' menulogocontainer"><img class="mycompany" title="'.dol_escape_htmltag($title).'" alt="" src="'.$urllogo.'" style="max-width: 100px"></div>'."\n";
+		print '<div class="center '.$logoContainerAdditionalClass.' menulogocontainer"><a href="/index.php?mainmenu=home&amp;leftmenu=home"><img class="mycompany" title="'.dol_escape_htmltag($title).'" alt="" src="'.$urllogo.'" style="max-width: 100px"></a></div>'."\n";
 
 		print_end_menu_entry(4);
 	}
@@ -653,6 +653,8 @@ function print_end_menu_array()
  * @param	array		$moredata			An array with more data to output
  * @return	int								Nb of menu entries
  */
+
+//VASA modifico menu esquerre per la nova barra 
 function print_left_eldy_menu($db, $menu_array_before, $menu_array_after, &$tabMenu, &$menu, $noout = 0, $forcemainmenu = '', $forceleftmenu = '', $moredata = null)
 {
 	global $user, $conf, $langs, $dolibarr_main_db_name, $mysoc;
@@ -665,8 +667,8 @@ function print_left_eldy_menu($db, $menu_array_before, $menu_array_after, &$tabM
 	$leftmenu = ($forceleftmenu ? '' : (empty($_SESSION["leftmenu"]) ? 'none' : $_SESSION["leftmenu"]));
 
     $usemenuhider = 0;
-
-	if (is_array($moredata) && !empty($moredata['searchform']))	// searchform can contains select2 code or link to show old search form or link to switch on search page
+    //VASA no mostrar search ni marcadors
+	/*if (is_array($moredata) && !empty($moredata['searchform']))	// searchform can contains select2 code or link to show old search form or link to switch on search page
 	{
         print "\n";
         print "<!-- Begin SearchForm -->\n";
@@ -684,7 +686,7 @@ function print_left_eldy_menu($db, $menu_array_before, $menu_array_after, &$tabM
 	    print $moredata['bookmarks'];
 	    print '</div>'."\n";
 	    print "<!-- End Bookmarks -->\n";
-	}
+	}*/
 
 	/**
 	 * We update newmenu with entries found into database
@@ -1946,12 +1948,40 @@ function print_left_eldy_menu($db, $menu_array_before, $menu_array_after, &$tabM
 
 	// Show menu
 	$invert = empty($conf->global->MAIN_MENU_INVERT) ? "" : "invert";
+        print '<div class="table"><table class="submenu table"><tr>';
+        //var_dump($menu_array); die();
 	if (empty($noout))
 	{
 		$altok = 0; $blockvmenuopened = false; $lastlevel0 = '';
 		$num = count($menu_array);
+                $titre_Seccio = "";
+                //Crear Grups
+                $grupText="";
+                $numGrups=-1;
+                $grupLengh[0]=0;
+                
+                for ($i = 0; $i < $num; $i++)     // Loop on each menu entry
+		{
+                    //var_dump($menu_array[$i]);
+                    if($menu_array[$i]['titre'] != 'Estadístiques'){
+                        if($menu_array[$i]['langs'] == $grupText){
+                            $grupLengh[$numGrups] = $grupLengh[$numGrups]+1;
+                        }else{
+                            $grupText = $menu_array[$i]['langs'];
+                            $numGrups = $numGrups + 1;
+                            $grupLengh[$numGrups] = 0;
+                        }
+                    }
+                    
+                }
+                //var_dump($grupLengh);
+                $numGrups=0;
 		for ($i = 0; $i < $num; $i++)     // Loop on each menu entry
 		{
+
+                    //var_dump($menu_array[$i]['titre']);
+                    if($menu_array[$i]['titre'] != 'Estadístiques'){
+                       
 			$showmenu = true;
 			if (!empty($conf->global->MAIN_MENU_HIDE_UNAUTHORIZED) && empty($menu_array[$i]['enabled'])) 	$showmenu = false;
 
@@ -1965,17 +1995,17 @@ function print_left_eldy_menu($db, $menu_array_before, $menu_array_after, &$tabM
 				{
 				    if (empty($menu_array[$j]['level'])) $lastopened = false;
 				}
-                                //VASA afecur clase si no es admin
+                                //VASA afegir classe si no es admin
                                 
                                 $classBorrar = $menu_array[$i]['enabled'] == 1 ? "" : "disabledMenu"; 
-				if ($altok % 2 == 0)
+				/*if ($altok % 2 == 0)
 				{
 					print '<div class="blockvmenu '.$classBorrar.' blockvmenuimpair'.$invert.($lastopened ? ' blockvmenulast' : '').($altok == 1 ? ' blockvmenufirst' : '').'">'."\n";
 				}
 				else
 				{
 					print '<div class="blockvmenu '.$classBorrar.' blockvmenupair'.$invert.($lastopened ? ' blockvmenulast' : '').($altok == 1 ? ' blockvmenufirst' : '').'">'."\n";
-				}
+				}*/
 			}
 
 			// Add tabulation
@@ -2018,21 +2048,25 @@ function print_left_eldy_menu($db, $menu_array_before, $menu_array_after, &$tabM
 
 
 			print '<!-- Process menu entry with mainmenu='.$menu_array[$i]['mainmenu'].', leftmenu='.$menu_array[$i]['leftmenu'].', level='.$menu_array[$i]['level'].' enabled='.$menu_array[$i]['enabled'].', position='.$menu_array[$i]['position'].' -->'."\n";
-
+                        
+                        
+                        //VASA modificacio per fer los box de menu
 			// Menu level 0
+                        
 			if ($menu_array[$i]['level'] == 0)
 			{
                             
 				if ($menu_array[$i]['enabled'])     // Enabled so visible
 				{
-					print '<div class="menu_titre">'.$tabstring;
-					if ($shorturlwithoutparam) print '<a class="vmenu" href="'.$url.'"'.($menu_array[$i]['target'] ? ' target="'.$menu_array[$i]['target'].'"' : '').'>';
-					else print '<span class="vmenu">';
+                                    if($numGrups==0){$marginleft = 0;}else{$marginleft = 100*$grupLengh[$numGrups-1];}
+					print '<div class="menu_titre" style="width:'.(100*$grupLengh[$numGrups]).'px; margin-left:'.$marginleft.'px;">'.$tabstring;
+                                        $numGrups++;
+					print '<span class="vmenu">';
 					print ($menu_array[$i]['prefix'] ? $menu_array[$i]['prefix'] : '').$menu_array[$i]['titre'];
-					if ($shorturlwithoutparam) print '</a>';
-					else print '</span>';
+					print '</span>';
 					print '</div>'."\n";
 					$lastlevel0 = 'enabled';
+                                        $titre_Seccio = $menu_array[$i]['titre'];
 				}
 				elseif ($showmenu)                 // Not enabled but visible (so greyed)
 				{
@@ -2044,10 +2078,11 @@ function print_left_eldy_menu($db, $menu_array_before, $menu_array_after, &$tabM
 				{
 				    $lastlevel0 = 'hidden';
 				}
-				if ($showmenu)
+				/*if ($showmenu)
 				{
 					print '<div class="menu_top"></div>'."\n";
-				}
+				}*/
+                            
 			}
 
 			// Menu level > 0
@@ -2058,15 +2093,20 @@ function print_left_eldy_menu($db, $menu_array_before, $menu_array_after, &$tabM
 
 				if ($menu_array[$i]['enabled'] && $lastlevel0 == 'enabled')     // Enabled so visible, except if parent was not enabled.
 				{
-					print '<div class="menu_contenu'.$cssmenu.'">'.$tabstring;
+					print '<td class="menu_contenu'.$cssmenu.'">'.$tabstring;
 					if ($shorturlwithoutparam) print '<a class="vsmenu" href="'.$url.'"'.($menu_array[$i]['target'] ? ' target="'.$menu_array[$i]['target'].'"' : '').'>';
 					else print '<span class="vsmenu">';
-					print $menu_array[$i]['titre'];
+                                        //var_dump($menu_array[$i]); die();
+                                        //$menu_array[$i]['utl_icon'] = 'new.png';
+                                        if($menu_array[$i]['url_icon'] == NULL){$menu_array[$i]['url_icon'] = 'window.png';}
+                                        print '<div class="imatgeMenu"><img src="/responsiveModule/img/menuicon/'.$menu_array[$i]['url_icon'].'"></div>';
+                                        
+					print '<div class="divTextSubMenu"><p class="textSubMenu">'.$menu_array[$i]['titre'].'</p></dov;';
 					if ($shorturlwithoutparam) print '</a>';
 					else print '</span>';
 					// If title is not pure text and contains a table, no carriage return added
-					if (!strstr($menu_array[$i]['titre'], '<table')) print '<br>';
-					print '</div>'."\n";
+					
+					print '</td>'."\n";
 				}
 				elseif ($showmenu && $lastlevel0 == 'enabled')       // Not enabled but visible (so greyed), except if parent was not enabled.
 				{
@@ -2074,17 +2114,20 @@ function print_left_eldy_menu($db, $menu_array_before, $menu_array_after, &$tabM
 				}
 			}
 
-			// If next is a new block or if there is nothing after
-			if (empty($menu_array[$i + 1]['level']))               // End menu block
-			{
-				if ($showmenu)
-					print '<div class="menu_end"></div>'."\n";
-				if ($blockvmenuopened) { print '</div>'."\n"; $blockvmenuopened = false; }
-			}
+			
+                    }
+                    // If next is a new block or if there is nothing after
+                    if (empty($menu_array[$i + 1]['level']))               // End menu block
+                    {
+                            if ($showmenu)
+                                print '<td class="separacio-submenu"> </td>';
+                                    //print '<div class="menu_end"></div>'."\n";
+                            //if ($blockvmenuopened) { print '</tr>'."\n"; $blockvmenuopened = false; }
+                    }
 		}
 
-		if ($altok) print '<div class="blockvmenuend"></div>'; // End menu block
+		//if ($altok) print '<div class="blockvmenuend"></div>'; // End menu block
 	}
-
+        print '</table></div>';
 	return count($menu_array);
 }

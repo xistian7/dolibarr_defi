@@ -1912,6 +1912,8 @@ function top_menu_user(User $user, Translate $langs)
  *  @param  string  $acceptdelayedhtml          1 if caller request to have html delayed content not returned but saved into global $delayedhtmlcontent (so caller can show it at end of page to avoid flash FOUC effect)
  *  @return	void
  */
+
+//VASA modificacio funcio per canvi de funcionament menú
 function left_menu($menu_array_before, $helppagename = '', $notused = '', $menu_array_after = '', $leftmenuwithoutmainarea = 0, $title = '', $acceptdelayedhtml = 0)
 {
 	global $user, $conf, $langs, $db, $form;
@@ -1927,7 +1929,7 @@ function left_menu($menu_array_before, $helppagename = '', $notused = '', $menu_
 		// Instantiate hooks of thirdparty module
 		$hookmanager->initHooks(array('searchform','leftblock'));
 
-		print "\n".'<!-- Begin side-nav id-left -->'."\n".'<div class="side-nav"><div id="id-left">'."\n";
+		print "\n".'<!-- Begin side-nav id-left -->'."\n".'<div class="sub-menu"><div id="sub-menu-subdiv">'."\n";
 
 		if ($conf->browser->layout == 'phone') $conf->global->MAIN_USE_OLD_SEARCH_FORM=1;	// Select into select2 is awfull on smartphone. TODO Is this still true with select2 v4 ?
 
@@ -2095,7 +2097,7 @@ function main_area($title = '')
 {
 	global $conf, $langs;
 
-	if (empty($conf->dol_hide_leftmenu)) print '<div id="id-right">';
+	if (empty($conf->dol_hide_leftmenu)) print '<div id="contingutapp" class="container-fluid">';
 
 	print "\n";
 

@@ -25,6 +25,7 @@
 require_once DOL_DOCUMENT_ROOT . "/core/class/html.form.class.php";
 require_once DOL_DOCUMENT_ROOT . "/core/class/html.formmail.class.php";
 require_once DOL_DOCUMENT_ROOT . "/core/class/html.formprojet.class.php";
+require_once DOL_DOCUMENT_ROOT.'/basic_lib/ticketvasa.php';
 
 if (!class_exists('FormCompany')) {
     include DOL_DOCUMENT_ROOT . '/core/class/html.formcompany.class.php';
@@ -128,6 +129,8 @@ class FormTicket
      */
     public function showForm($withdolfichehead = 0)
     {
+        
+        //VASA modificar formulari nou ticket
         global $conf, $langs, $user, $hookmanager;
 
         // Load translation files required by the page
@@ -159,12 +162,60 @@ class FormTicket
         }
         print '<input type="hidden" name="fk_user_create" value="' . $this->fk_user_create . '">';
 
-        print '<table class="border centpercent">';
+        print '<div class="container-fluid"><div class="row">';
+        print '<div class="col-md-6"';
+        // Subject
+        if ($this->withtitletopic) {
+            print '<label for="subject"><span class="fieldrequired">' . $langs->trans("Subject").' & '.$langs->trans("Message") . '</span></label><br/>';
 
+            // Réponse à un ticket : affichage du titre du thread en readonly
+            if ($this->withtopicreadonly) {
+                print $langs->trans('SubjectAnswerToTicket') . ' ' . $this->topic_title;
+                
+            } else {
+                if ($this->withthreadid > 0) {
+                    $subject = $langs->trans('SubjectAnswerToTicket') . ' ' . $this->withthreadid . ' : ' . $this->topic_title . '';
+                }
+                print '<input class="text" style="width:100%;" size="50" id="subject" name="subject" value="' . (GETPOST('subject', 'alpha') ? GETPOST('subject', 'alpha') : $subject) . '" />';
+                
+            }
+        }
+        // MESSAGE
+        $msg = GETPOSTISSET('message') ? GETPOST('message', 'none') : '';
+        //print '<label for="message"><span class="fieldrequired">' . $langs->trans("Message") . '</span></label>';
+
+        // If public form, display more information
+        $toolbarname = 'dolibarr_notes';
+        if ($this->ispublic)
+        {
+            $toolbarname = 'dolibarr_details';
+            print '<div class="warning">' . ($conf->global->TICKET_PUBLIC_TEXT_HELP_MESSAGE ? $conf->global->TICKET_PUBLIC_TEXT_HELP_MESSAGE : $langs->trans('TicketPublicPleaseBeAccuratelyDescribe')) . '</div>';
+        }
+        include_once DOL_DOCUMENT_ROOT . '/core/class/doleditor.class.php';
+        $uselocalbrowser = true;
+        $doleditor = new DolEditor('message', $msg, '100%', 230, $toolbarname, 'In', true, $uselocalbrowser);
+        $doleditor->Create();
+        print '<br/>';
+        // FK_USER_CREATE
+        if ($this->withusercreate > 0 && $this->fk_user_create) {
+            print '<tr><td class="titlefield">' . $langs->trans("CreatedBy") . '</td><td>';
+            $langs->load("users");
+            $fuser = new User($this->db);
+
+            if ($this->withcreatereadonly) {
+                if ($res = $fuser->fetch($this->fk_user_create)) {
+                    print $fuser->getNomUrl(1);
+                }
+            }
+            print ' &nbsp; ';
+            print "</td></tr>\n";
+        }
+        print '</div>';
+        print '<div class="col-md-6">';
         if ($this->withref) {
             // Ref
             $defaultref = $ticketstat->getDefaultRef();
-            print '<tr><td class="titlefieldcreate"><span class="fieldrequired">' . $langs->trans("Ref") . '</span></td><td><input size="18" type="text" name="ref" value="' . (GETPOST("ref", 'alpha') ? GETPOST("ref", 'alpha') : $defaultref) . '"></td></tr>';
+            print '<input size="18" type="hidden" name="ref" value="' . (GETPOST("ref", 'alpha') ? GETPOST("ref", 'alpha') : $defaultref) . '">';
         }
 
         // TITLE
@@ -198,75 +249,44 @@ class FormTicket
         }
 
         // Type
-        print '<tr><td class="titlefield"><span class="fieldrequired"><label for="selecttype_code">' . $langs->trans("TicketTypeRequest") . '</span></label></td><td>';
+        print '<tr><td class="titlefield"><span class="fieldrequired"><label for="selecttype_code">' . $langs->trans("TicketTypeRequest") . '</span></label></td><td><br/>';
         $this->selectTypesTickets((GETPOST('type_code') ? GETPOST('type_code') : $this->type_code), 'type_code', '', '2');
-        print '</td></tr>';
+        print '</td></tr><br/><br/>';
 
         // Severity
-        print '<tr><td><span class="fieldrequired"><label for="selectseverity_code">' . $langs->trans("TicketSeverity") . '</span></label></td><td>';
+        print '<tr><td><span class="fieldrequired"><label for="selectseverity_code">' . $langs->trans("TicketSeverity") . '</span></label></td><td><br/>';
         $this->selectSeveritiesTickets((GETPOST('severity_code') ? GETPOST('severity_code') : $this->severity_code), 'severity_code', '', '2');
-        print '</td></tr>';
+        print '</td></tr><br/><br/>';
 
-        // Group
-        print '<tr><td><span class="fieldrequired"><label for="selectcategory_code">' . $langs->trans("TicketGroup") . '</span></label></td><td>';
+        // Group VASA de moment no ho mostrem
+        print '<div style="position:absolute; opacity:0;"><tr><td><span class="fieldrequired"><label for="selectcategory_code">' . $langs->trans("TicketGroup") . '</span></label></td><td><br/>';
         $this->selectGroupTickets((GETPOST('category_code') ? GETPOST('category_code') : $this->category_code), 'category_code', '', '2');
-        print '</td></tr>';
+        print '</td></tr></div>';
 
-        // Subject
-        if ($this->withtitletopic) {
-            print '<tr><td><label for="subject"><span class="fieldrequired">' . $langs->trans("Subject") . '</span></label></td><td>';
-
-            // Réponse à un ticket : affichage du titre du thread en readonly
-            if ($this->withtopicreadonly) {
-                print $langs->trans('SubjectAnswerToTicket') . ' ' . $this->topic_title;
-                print '</td></tr>';
-            } else {
-                if ($this->withthreadid > 0) {
-                    $subject = $langs->trans('SubjectAnswerToTicket') . ' ' . $this->withthreadid . ' : ' . $this->topic_title . '';
-                }
-                print '<input class="text" size="50" id="subject" name="subject" value="' . (GETPOST('subject', 'alpha') ? GETPOST('subject', 'alpha') : $subject) . '" />';
-                print '</td></tr>';
-            }
-        }
-
-        // MESSAGE
-        $msg = GETPOSTISSET('message') ? GETPOST('message', 'none') : '';
-        print '<tr><td><label for="message"><span class="fieldrequired">' . $langs->trans("Message") . '</span></label></td><td>';
-
-        // If public form, display more information
-        $toolbarname = 'dolibarr_notes';
-        if ($this->ispublic)
+        //PROJECT
+        if (! empty($conf->projet->enabled) && ! $this->ispublic)
         {
-            $toolbarname = 'dolibarr_details';
-            print '<div class="warning">' . ($conf->global->TICKET_PUBLIC_TEXT_HELP_MESSAGE ? $conf->global->TICKET_PUBLIC_TEXT_HELP_MESSAGE : $langs->trans('TicketPublicPleaseBeAccuratelyDescribe')) . '</div>';
-        }
-        include_once DOL_DOCUMENT_ROOT . '/core/class/doleditor.class.php';
-        $uselocalbrowser = true;
-        $doleditor = new DolEditor('message', $msg, '100%', 230, $toolbarname, 'In', true, $uselocalbrowser);
-        $doleditor->Create();
-        print '</td></tr>';
-
-        // FK_USER_CREATE
-        if ($this->withusercreate > 0 && $this->fk_user_create) {
-            print '<tr><td class="titlefield">' . $langs->trans("CreatedBy") . '</td><td>';
-            $langs->load("users");
-            $fuser = new User($this->db);
-
-            if ($this->withcreatereadonly) {
-                if ($res = $fuser->fetch($this->fk_user_create)) {
-                    print $fuser->getNomUrl(1);
-                }
+            //VASA seleccionar per defecte el primer projecte existent
+            if(GETPOST('projectid', 'int') != ""){
+                $projecte_selec = GETPOST('projectid', 'int');   
+            }else{
+                $ticketvasa = new Ticketvasa($this->db);
+                $projecte_selec = $ticketvasa->getDefaultProject();
             }
-            print ' &nbsp; ';
-            print "</td></tr>\n";
+            $formproject=new FormProjets($this->db);
+            print '<label for="project"><span class="">' . $langs->trans("Project") . '</span></label><br/>';
+            print $formproject->select_projects(-1, $projecte_selec, 'projectid', 0, 0, 1, 1).'<br/><br/>';
         }
+        
 
-        // Customer or supplier
+        
+
+        
         if ($this->withcompany) {
             // altairis: force company and contact id for external user
             if (empty($user->socid)) {
                 // Company
-                print '<tr><td class="titlefield">' . $langs->trans("ThirdParty") . '</td><td>';
+                print '<tr><td class="titlefield">' . $langs->trans("ThirdParty") . '</td><td><br/>';
                 $events = array();
                 $events[] = array('method' => 'getContacts', 'url' => dol_buildpath('/core/ajax/contacts.php', 1), 'htmlname' => 'contactid', 'params' => array('add-customer-contact' => 'disabled'));
                 print $form->select_company($this->withfromsocid, 'socid', '', 1, 1, '', $events, 0, 'minwidth200');
@@ -317,14 +337,15 @@ class FormTicket
                                         } else {
                                             $("#inputautocomplete"+htmlname).val("");
                                         }
-                                        $("select#" + htmlname).change();	/* Trigger event change */
+                                        $("select#" + htmlname).change();	
                                     }
                             );
                         }
                     });
                     </script>';
                 }
-
+            }
+            /*
                 // Contact and type
                 print '<tr><td>' . $langs->trans("Contact") . '</td><td>';
                 // If no socid, set to -1 to avoid full contacts list
@@ -338,26 +359,24 @@ class FormTicket
                 print '<td><input type="hidden" name="contactid" value="' . $user->contactid . '"/></td>';
                 print '<td><input type="hidden" name="type" value="Z"/></td></tr>';
             }
-
+            
             // Notify thirdparty at creation
             if (empty($this->ispublic))
             {
                 print '<tr><td><label for="notify_tiers_at_create">' . $langs->trans("TicketNotifyTiersAtCreation") . '</label></td><td>';
                 print '<input type="checkbox" id="notify_tiers_at_create" name="notify_tiers_at_create"'.($this->withnotifytiersatcreate?' checked="checked"':'').'>';
                 print '</td></tr>';
-            }
+            }*/
         }
+        
+        //ASSIGNAT
+        print '<br/><br/><tr><td class="titlefield">' . $langs->trans("AssignUser") . '</td><td><br/>';
+        $empleats=array(3,4);
+        print $form->select_dolusers($user->id, 'fk_user_assign', 1, $empleats);
+        
 
-        if (! empty($conf->projet->enabled) && ! $this->ispublic)
-        {
-            $formproject=new FormProjets($this->db);
-            print '<tr><td><label for="project"><span class="">' . $langs->trans("Project") . '</span></label></td><td>';
-            print $formproject->select_projects(-1, GETPOST('projectid', 'int'), 'projectid', 0, 0, 1, 1);
-            print '</td></tr>';
-        }
-
-        // Attached files
-        if (!empty($this->withfile)) {
+        // Attached files VASA de moment no pujam fitxers a la creació
+        /*if (!empty($this->withfile)) {
             // Define list of attached files
             $listofpaths = array();
             $listofnames = array();
@@ -406,7 +425,7 @@ class FormTicket
             $out .= "</td></tr>\n";
 
             print $out;
-        }
+        }*/
 
         // Other attributes
         $reshook = $hookmanager->executeHooks('formObjectOptions', $parameters, $ticketstat, $action); // Note that $action and $object may have been modified by hook
@@ -414,8 +433,8 @@ class FormTicket
         {
             print $ticketstat->showOptionals($extrafields, 'edit');
         }
-
-        print '</table>';
+        print '</div>';
+        print '</div></div>';
 
         if ($withdolfichehead) dol_fiche_end();
 

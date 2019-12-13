@@ -151,6 +151,7 @@ if (GETPOST('add', 'alpha') && $user->rights->ticket->write) {
         $object->notify_tiers_at_create = empty($notifyTiers) ? 0 : 1;
 
         $object->fk_project = GETPOST('projectid', 'int');
+        $object->fk_user_assign = GETPOST('fk_user_assign', 'int');
 
         $extrafields = new ExtraFields($db);
         $extralabels = $extrafields->fetch_name_optionals_label($object->table_element);
@@ -178,8 +179,8 @@ if (GETPOST('add', 'alpha') && $user->rights->ticket->write) {
                 $object->setProject(GETPOST('projectid'));
             }
 
-            // Auto assign user
-            if ($conf->global->TICKET_AUTO_ASSIGN_USER_CREATE) {
+            // Auto assign user VASA no asignem automaticament
+            /*if ($conf->global->TICKET_AUTO_ASSIGN_USER_CREATE) {
                 $result = $object->assignUser($user, $user->id, 1);
                 $object->add_contact($user->id, "SUPPORTTEC", 'internal');
             }
@@ -198,7 +199,7 @@ if (GETPOST('add', 'alpha') && $user->rights->ticket->write) {
                     } else {
                     }
                 }
-            }
+            }*/
 
             // Auto create fiche intervention
             if ($conf->global->TICKET_AUTO_CREATE_FICHINTER_CREATE)

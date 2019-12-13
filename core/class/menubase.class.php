@@ -83,7 +83,7 @@ class Menubase
     public $enabled;
     public $user;
     public $tms;
-
+    public $url_icon;
 
     /**
 	 *	Constructor
@@ -126,6 +126,7 @@ class Menubase
         $this->perms=trim($this->perms);
         $this->enabled=trim($this->enabled);
         $this->user=trim($this->user);
+        $this->url_icon=trim($this->url_icon);
         if (empty($this->position)) $this->position=0;
         if (! $this->level) $this->level=0;
 
@@ -189,7 +190,8 @@ class Menubase
 		        $sql.= "langs,";
 		        $sql.= "perms,";
 		        $sql.= "enabled,";
-		        $sql.= "usertype";
+		        $sql.= "usertype,";
+                        $sql.= "url_icon";
 		        $sql.= ") VALUES (";
 		        $sql.= " '".$this->db->escape($this->menu_handler)."',";
 		        $sql.= " '".$this->db->escape($conf->entity)."',";
@@ -207,7 +209,8 @@ class Menubase
 		        $sql.= " '".$this->db->escape($this->langs)."',";
 		        $sql.= " '".$this->db->escape($this->perms)."',";
 		        $sql.= " '".$this->db->escape($this->enabled)."',";
-		        $sql.= " '".$this->db->escape($this->user)."'";
+		        $sql.= " '".$this->db->escape($this->user)."',";
+                        $sql.= " '".$this->db->escape($this->url_icon)."'";
 		        $sql.= ")";
 
 		        dol_syslog(get_class($this)."::create", LOG_DEBUG);
@@ -267,7 +270,7 @@ class Menubase
         $this->perms=trim($this->perms);
         $this->enabled=trim($this->enabled);
         $this->user=trim($this->user);
-
+        $this->url_icon=trim($this->url_icon);
         // Check parameters
         // Put here code to add control on parameters values
 
@@ -288,7 +291,8 @@ class Menubase
         $sql.= " langs='".$this->db->escape($this->langs)."',";
         $sql.= " perms='".$this->db->escape($this->perms)."',";
         $sql.= " enabled='".$this->db->escape($this->enabled)."',";
-        $sql.= " usertype='".$this->db->escape($this->user)."'";
+        $sql.= " usertype='".$this->db->escape($this->user)."',";
+        $sql.= " url_icon='".$this->db->escape($this->url_icon)."'";
         $sql.= " WHERE rowid=".$this->id;
 
         dol_syslog(get_class($this)."::update", LOG_DEBUG);
@@ -333,6 +337,7 @@ class Menubase
         $sql.= " t.perms,";
         $sql.= " t.enabled,";
         $sql.= " t.usertype as user,";
+        $sql.= " t.url_icon,";
         $sql.= " t.tms";
         $sql.= " FROM ".MAIN_DB_PREFIX."menu as t";
         $sql.= " WHERE t.rowid = ".$id;
@@ -364,6 +369,7 @@ class Menubase
                 $this->perms = $obj->perms;
                 $this->enabled = str_replace("\"", "'", $obj->enabled);
                 $this->user = $obj->user;
+                $this->url_icon = $obj->url_icon;
                 $this->tms = $this->db->jdate($obj->tms);
             }
             $this->db->free($resql);
@@ -429,6 +435,7 @@ class Menubase
         $this->perms='';
         $this->enabled='';
         $this->user='';
+        $this->url_icon='';
         $this->tms='';
     }
 
@@ -509,7 +516,7 @@ class Menubase
 
         		if (empty($val['fk_leftmenu']))
         		{
-        			$this->newmenu->add($val['url'], $val['titre'], 0, $val['perms'], $val['target'], $val['mainmenu'], $val['leftmenu'], $val['position']);
+        			$this->newmenu->add($val['url'], $val['titre'], 0, $val['perms'], $val['target'], $val['mainmenu'], $val['leftmenu'], $val['position'],'','','','', $val['url_icon'], $val['langs']);
         			//var_dump($this->newmenu->liste);
         		}
         		else
@@ -538,7 +545,7 @@ class Menubase
         				}
         			}
         			//print 'We must insert menu entry between entry '.$lastid.' and '.$nextid.'<br>';
-        			if ($found) $this->newmenu->insert($lastid, $val['url'], $val['titre'], $searchlastsub, $val['perms'], $val['target'], $val['mainmenu'], $val['leftmenu'], $val['position']);
+        			if ($found) $this->newmenu->insert($lastid, $val['url'], $val['titre'], $searchlastsub, $val['perms'], $val['target'], $val['mainmenu'], $val['leftmenu'], $val['position'],'','','','', $val['url_icon'],$val['langs']);
         			else {
         			    dol_syslog("Error. Modules ".$val['module']." has defined a menu entry with a parent='fk_mainmenu=".$val['fk_leftmenu'].",fk_leftmenu=".$val['fk_leftmenu']."' and position=".$val['position'].'. The parent was not found. May be you forget it into your definition of menu, or may be the parent has a "position" that is after the child (fix field "position" of parent or child in this case).', LOG_WARNING);
         			    //print "Parent menu not found !!<br>";
@@ -570,7 +577,7 @@ class Menubase
         $mainmenu=$mymainmenu;  // To export to dol_eval function
         $leftmenu=$myleftmenu;  // To export to dol_eval function
 
-        $sql = "SELECT m.rowid, m.type, m.module, m.fk_menu, m.fk_mainmenu, m.fk_leftmenu, m.url, m.titre, m.langs, m.perms, m.enabled, m.target, m.mainmenu, m.leftmenu, m.position";
+        $sql = "SELECT m.rowid, m.type, m.module, m.fk_menu, m.fk_mainmenu, m.fk_leftmenu, m.url, m.titre, m.langs, m.perms, m.enabled, m.target, m.mainmenu, m.leftmenu, m.position, m.url_icon, m.langs";
         $sql.= " FROM ".MAIN_DB_PREFIX."menu as m";
         $sql.= " WHERE m.entity IN (0,".$conf->entity.")";
         $sql.= " AND m.menu_handler IN ('".$menu_handler."','all')";
@@ -667,11 +674,11 @@ class Menubase
                     $tabMenu[$b]['perms']       = $perms;
                     $tabMenu[$b]['enabled']     = $enabled;
                     $tabMenu[$b]['type']        = $menu['type'];
-                    //$tabMenu[$b]['langs']       = $menu['langs'];
+                    $tabMenu[$b]['langs']       = $menu['langs'];
                     $tabMenu[$b]['fk_mainmenu'] = $menu['fk_mainmenu'];
                     $tabMenu[$b]['fk_leftmenu'] = $menu['fk_leftmenu'];
                     $tabMenu[$b]['position']    = (int) $menu['position'];
-
+                    $tabMenu[$b]['url_icon'] = $menu['url_icon'];    
                     $b++;
                 }
 
@@ -709,7 +716,7 @@ class Menubase
             //si un element a pour pere : $pere
             if ( (($tab[$x]['fk_menu'] >= 0 && $tab[$x]['fk_menu'] == $pere)) && $tab[$x]['enabled'])
             {
-                $this->newmenu->add($tab[$x]['url'], $tab[$x]['titre'], ($level-1), $tab[$x]['perms'], $tab[$x]['target'], $tab[$x]['mainmenu'], $tab[$x]['leftmenu']);
+                $this->newmenu->add($tab[$x]['url'], $tab[$x]['titre'], ($level-1), $tab[$x]['perms'], $tab[$x]['target'], $tab[$x]['mainmenu'], $tab[$x]['leftmenu'],'','','','', $val['url_icon'],$val['langs']);
                 $this->recur($tab, $tab[$x]['rowid'], ($level+1));
             }
         }

@@ -286,8 +286,11 @@ if (empty($reshook))
 						}
 
 						$fk_parent_line = 0;
-						$num = count($lines);
-
+                                                if($lines){
+                                                    $num = count($lines);
+                                                }else{
+                                                    $num = 0;
+                                                }
 						for ($i = 0; $i < $num; $i++)
 						{
 							$product_type = ($lines[$i]->product_type ? $lines[$i]->product_type : Product::TYPE_PRODUCT);

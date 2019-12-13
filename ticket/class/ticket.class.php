@@ -383,9 +383,11 @@ class Ticket extends CommonObject
             $sql .= ")";
 
             $this->db->begin();
-
+            
             dol_syslog(get_class($this) . "::create sql=" . $sql, LOG_DEBUG);
+            
             $resql = $this->db->query($sql);
+            
             if (!$resql) {
                 $error++;
                 $this->errors[] = "Error " . $this->db->lasterror();
@@ -413,7 +415,7 @@ class Ticket extends CommonObject
                     }
                 }
             }
-
+            
             // Commit or rollback
             if ($error) {
                 foreach ($this->errors as $errmsg) {
@@ -423,6 +425,7 @@ class Ticket extends CommonObject
                 $this->db->rollback();
                 return -1 * $error;
             } else {
+                
                 $this->db->commit();
                 return $this->id;
             }

@@ -22,10 +22,10 @@ $dolibarr_main_db_collation='utf8_bin';
 // Authentication settings
 $dolibarr_main_authentication='dolibarr';*/
 $dolibarr_main_url_root='http://dolibarr.local';
-$dolibarr_main_document_root='C:/xampp/htdocs/dolibarr';
+$dolibarr_main_document_root='C:/xampp/htdocs/dolibarr_defi';
 $dolibarr_main_url_root_alt='/custom';
-$dolibarr_main_document_root_alt='C:/xampp/htdocs/dolibarr/custom';
-$dolibarr_main_data_root='C:/xampp/htdocs/dolibarr/documents';
+$dolibarr_main_document_root_alt='C:/xampp/htdocs/dolibarr_defi/custom';
+$dolibarr_main_data_root='C:/xampp/htdocs/dolibarr_defi/documents';
 $dolibarr_main_db_host='localhost';
 $dolibarr_main_db_port='3306';
 $dolibarr_main_db_name='dolibarrrpm';
@@ -64,3 +64,5 @@ $dolibarr_mailing_limit_sendbyweb='0';
 
 //$dolibarr_font_DOL_DEFAULT_TTF='';
 //$dolibarr_font_DOL_DEFAULT_TTF_BOLD='';
+//VASA configuracions
+$rutaIcones='/responsiveModule/img/menuicon/';
