@@ -511,7 +511,7 @@ function print_eldy_menu($db, $atarget, $type_user, &$tabMenu, &$menu, $noout = 
 		print_start_menu_entry('companylogo', 'class="tmenu tmenucompanylogo"', 1);
 
 
-		print '<div class="center '.$logoContainerAdditionalClass.' menulogocontainer"><a href="/index.php?mainmenu=home&amp;leftmenu=home"><img class="mycompany" title="'.dol_escape_htmltag($title).'" alt="" src="'.$urllogo.'" style="max-width: 100px"></a></div>'."\n";
+		print '<div class="center '.$logoContainerAdditionalClass.' menulogocontainer"><a href="./index.php?mainmenu=home&amp;leftmenu=home"><img class="mycompany" title="'.dol_escape_htmltag($title).'" alt="" src="'.$urllogo.'" style="max-width: 100px"></a></div>'."\n";
 
 		print_end_menu_entry(4);
 	}
@@ -2103,7 +2103,7 @@ function print_left_eldy_menu($db, $menu_array_before, $menu_array_after, &$tabM
                                         //var_dump($menu_array[$i]); die();
                                         //$menu_array[$i]['utl_icon'] = 'new.png';
                                         if($menu_array[$i]['url_icon'] == NULL){$menu_array[$i]['url_icon'] = 'window.png';}
-                                        print '<div class="imatgeMenu"><img src="/responsiveModule/img/menuicon/'.$menu_array[$i]['url_icon'].'"></div>';
+                                        print '<div class="imatgeMenu"><img src="/clients/responsiveModule/img/menuicon/'.$menu_array[$i]['url_icon'].'"></div>';
                                         
 					print '<div class="divTextSubMenu"><p class="textSubMenu">'.$menu_array[$i]['titre'].'</p></dov;';
 					if ($shorturlwithoutparam) print '</a>';

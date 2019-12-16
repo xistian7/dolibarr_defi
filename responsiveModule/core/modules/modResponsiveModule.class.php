@@ -94,16 +94,16 @@ class modResponsiveModule extends DolibarrModules
             'theme' => 0,
             // Set this to relative path of css file if module has its own css file
             'css' => array(
-                '/responsivemodule/css/menu.css',
-                '/responsivemodule/css/body.css',
-                '/responsivemodule/css/bootstrap.css',
-                '/responsivemodule/css/bootstrap-grid.css',
-                '/responsivemodule/css/bootstrap-reboot.css',
+                '/responsiveModule/css/menu.css',
+                '/responsiveModule/css/body.css',
+                '/responsiveModule/css/bootstrap.css',
+                '/responsiveModule/css/bootstrap-grid.css',
+                '/responsiveModule/css/bootstrap-reboot.css',
             ),
             // Set this to relative path of js file if module must load a js on all pages
             'js' => array(
-                '/responsivemodule/js/bootstrap.js',
-                '/responsivemodule/js/bootstrap-bundle.js',
+                '/responsiveModule/js/bootstrap.js',
+                '/responsiveModule/js/bootstrap-bundle.js',
                 //   '/responsivemodule/js/responsivemodule.js.php',
             ),
             // Set here all hooks context managed by module. To find available hook context, make a "grep -r '>initHooks(' *" on source code. You can also set hook context to 'all'
@@ -119,7 +119,7 @@ class modResponsiveModule extends DolibarrModules
         );
         // Data directories to create when module is enabled.
         // Example: this->dirs = array("/responsivemodule/temp","/responsivemodule/subdir");
-        $this->dirs = array("/responsivemodule/temp");
+        $this->dirs = array("/responsiveModule/temp");
         // Config pages. Put here list of php page, stored into responsivemodule/admin directory, to use to setup module.
         $this->config_page_url = array("setup.php@responsivemodule");
         // Dependencies
