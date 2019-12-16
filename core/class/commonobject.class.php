@@ -6729,10 +6729,13 @@ abstract class CommonObject
                                         //var_dump($key);
                                         if($key == 'servicios2'){
                                                   $out .= '<td id="'.$html_id.'" class="col-md-1 col-md-first '.$this->element.'_extras_'.$key.'">';          
+                                        }elseif($key == 'tecnic'){
+                                                $this->id = 5;
+                                            $out .= '<td class="tdtop">'.$label.'</td><td id="'.$html_id.'" class="col-md-1 col-md-first '.$this->element.'_extras_'.$key.'">';
                                         }else{
                                             $out .= '<td id="'.$html_id.'" class="col-md-1 col-md-first '.$this->element.'_extras_'.$key.'">';
                                         }
-					
+					//var_dump($this->id);
 					//$out .='<td id="'.$html_id.'" class="'.$this->element.'_extras_'.$key.'">';
 
 					switch ($mode) {

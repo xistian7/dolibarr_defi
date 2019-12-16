@@ -76,9 +76,6 @@ table.submenu {
     height: 80px;
     width: auto;
 }
-td.separacio-submenu{
-    border-left: 1px solid black;;
-}
 .login_block.usedropdown{
     height: 35px !important;
     top: 0px;
@@ -121,9 +118,16 @@ sub-menu-subdiv{
 .textSubMenu{
     white-space: normal;
 }
-table.submenu td.separacio-submenu{
+table.submenu td.td-separacio-submenu{
+    padding-bottom: 10px;
+    padding-top: 10px;
+    border: none;
     width:1px !important;
-    border: 1px solid rgba(0,0,0,0.2);
+}
+table.submenu td .separacio-submenu{
+    border-left: 1px solid rgba(0,0,0,0.2) !important;
+    height: 100%;
+    margin-left:2px;
 }
 div.menu_titre {
     position: absolute;

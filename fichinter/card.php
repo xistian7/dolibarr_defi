@@ -922,7 +922,7 @@ if ($action == 'create')
 		$soc = new Societe($db);
 		$soc->fetch($socid);
 
-		print '<form name="fichinter" action="'.$_SERVER['PHP_SELF'].'" method="POST">';
+		print '<form class="taulaFormIntervencio" name="fichinter" action="'.$_SERVER['PHP_SELF'].'" method="POST">';
 		print '<input type="hidden" name="token" value="'.$_SESSION['newtoken'].'">';
 
 		dol_fiche_head('');
@@ -930,7 +930,7 @@ if ($action == 'create')
 		print '<table class="border centpercent">';
 
 		print '<input type="hidden" name="socid" value='.$soc->id.'>';
-		print '<tr><td class="fieldrequired titlefieldcreate">'.$langs->trans("ThirdParty").'</td><td>'.$soc->getNomUrl(1).'</td></tr>';
+		print '<tr><td class="fieldrequired titlefieldcreate" style="width:10%;">'.$langs->trans("ThirdParty").'</td><td style="width:85%;">'.$soc->getNomUrl(1).'</td></tr>';
 
 		print '<input type="hidden" name="action" value="add">';
 
@@ -982,7 +982,7 @@ if ($action == 'create')
 			print '</td></tr>';
 		}*/
 
-        // Model
+        /*// Model
         print '<tr>';
         print '<td>'.$langs->trans("DefaultModel").'</td>';
         print '<td colspan="2">';
@@ -1009,7 +1009,7 @@ if ($action == 'create')
         	print $doleditor->Create(1);
         	//print '<textarea name="note_private" cols="80" rows="'.ROWS_3.'">'.$note_private.'</textarea>';
         	print '</td></tr>';
-        }
+        }*/
 
         // Other attributes
         $parameters = array('colspan' => ' colspan="2"');
@@ -1431,7 +1431,7 @@ elseif ($id > 0 || !empty($ref))
 				{
                                     //VASA moficam taula de vista per productes i serveis
 					print '<tr class="oddeven">';
-                                        print '<td class=" col-md-2 col-md-first">'.round($intervencio->getProducoteOServeiLinia($objp->rowid), 2).'</td>';
+                                        print '<td class=" col-md-2 col-md-first">'.$intervencio->getProducoteOServeiLinia($objp->rowid).'</td>';
                                         print '<td class=" col-md-1 col-md-first" style="text-align:center;">'.round($intervencio->getCantidadLinia($objp->rowid), 2).'</td>';
                                         print '<td class=" col-md-1 col-md-first" style="text-align:center;">'.round($intervencio->getDescompteLinia($objp->rowid), 2).'</td>';
 					print '<td class=" col-md-5 col-md-first">';

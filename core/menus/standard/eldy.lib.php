@@ -560,7 +560,7 @@ function print_start_menu_entry($idsel, $classname, $showmode)
 {
 	if ($showmode)
 	{
-            //VASA afecur clase si no es admin
+            //VASA afegir clase si no es admin
             if ($showmode == 1)
             {
                 print '<li '.$classname.' id="mainmenutd_'.$idsel.'">';
@@ -1956,7 +1956,6 @@ function print_left_eldy_menu($db, $menu_array_before, $menu_array_after, &$tabM
 		$num = count($menu_array);
                 $titre_Seccio = "";
                 //Crear Grups
-                $grupText="";
                 $numGrups=-1;
                 $grupLengh[0]=0;
                 
@@ -1964,18 +1963,18 @@ function print_left_eldy_menu($db, $menu_array_before, $menu_array_after, &$tabM
 		{
                     //var_dump($menu_array[$i]);
                     if($menu_array[$i]['titre'] != 'Estadístiques'){
-                        if($menu_array[$i]['langs'] == $grupText){
+                        if($menu_array[$i]['level'] != 0){
                             $grupLengh[$numGrups] = $grupLengh[$numGrups]+1;
                         }else{
-                            $grupText = $menu_array[$i]['langs'];
                             $numGrups = $numGrups + 1;
                             $grupLengh[$numGrups] = 0;
                         }
                     }
-                    
+                    //var_dump($menu_array[$i]['id']);
                 }
                 //var_dump($grupLengh);
                 $numGrups=0;
+                $marginTotal=0;
 		for ($i = 0; $i < $num; $i++)     // Loop on each menu entry
 		{
 
@@ -2052,21 +2051,24 @@ function print_left_eldy_menu($db, $menu_array_before, $menu_array_after, &$tabM
                         
                         //VASA modificacio per fer los box de menu
 			// Menu level 0
-                        
-			if ($menu_array[$i]['level'] == 0)
+                        //var_dump($menu_array[$i]['mainmenu']); die();
+			if ($menu_array[$i]['level'] == 0 && $menu_array[$i]['mainmenu'] != 'home')
 			{
                             
 				if ($menu_array[$i]['enabled'])     // Enabled so visible
 				{
-                                    if($numGrups==0){$marginleft = 0;}else{$marginleft = 100*$grupLengh[$numGrups-1];}
-					print '<div class="menu_titre" style="width:'.(100*$grupLengh[$numGrups]).'px; margin-left:'.$marginleft.'px;">'.$tabstring;
+                                    
+					print '<div class="menu_titre" style="width:'.(100*$grupLengh[$numGrups]).'px; margin-left:'.$marginTotal.'px;">'.$tabstring;
+                                        $marginTotal = $marginTotal + 100 * $grupLengh[$numGrups];
                                         $numGrups++;
 					print '<span class="vmenu">';
-					print ($menu_array[$i]['prefix'] ? $menu_array[$i]['prefix'] : '').$menu_array[$i]['titre'];
+					print $menu_array[$i]['titre'];//($menu_array[$i]['prefix'] ? $menu_array[$i]['prefix'] : '').$menu_array[$i]['titre'];
 					print '</span>';
 					print '</div>'."\n";
 					$lastlevel0 = 'enabled';
                                         $titre_Seccio = $menu_array[$i]['titre'];
+                                        //var_dump($menu_array[$i]['titre']);
+                                        
 				}
 				elseif ($showmenu)                 // Not enabled but visible (so greyed)
 				{
@@ -2086,8 +2088,10 @@ function print_left_eldy_menu($db, $menu_array_before, $menu_array_after, &$tabM
 			}
 
 			// Menu level > 0
-			if ($menu_array[$i]['level'] > 0)
+			if ($menu_array[$i]['level'] > 0  || $menu_array[$i]['mainmenu'] == 'home')
 			{
+                            //var_dump($lastlevel0);
+                                $lastlevel0 = 'enabled';
 				$cssmenu = '';
 				if ($menu_array[$i]['url']) $cssmenu = ' menu_contenu'.dol_string_nospecial(preg_replace('/\.php.*$/', '', $menu_array[$i]['url']));
 
@@ -2120,7 +2124,7 @@ function print_left_eldy_menu($db, $menu_array_before, $menu_array_after, &$tabM
                     if (empty($menu_array[$i + 1]['level']))               // End menu block
                     {
                             if ($showmenu)
-                                print '<td class="separacio-submenu"> </td>';
+                                print '<td class="td-separacio-submenu"><div class="separacio-submenu">&nbsp;</div></td>';
                                     //print '<div class="menu_end"></div>'."\n";
                             //if ($blockvmenuopened) { print '</tr>'."\n"; $blockvmenuopened = false; }
                     }
