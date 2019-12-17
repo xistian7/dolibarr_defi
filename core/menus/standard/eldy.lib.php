@@ -2103,7 +2103,7 @@ function print_left_eldy_menu($db, $menu_array_before, $menu_array_after, &$tabM
                                         //var_dump($menu_array[$i]); die();
                                         //$menu_array[$i]['utl_icon'] = 'new.png';
                                         if($menu_array[$i]['url_icon'] == NULL){$menu_array[$i]['url_icon'] = 'window.png';}
-                                        print '<div class="imatgeMenu"><img src="/clients/responsiveModule/img/menuicon/'.$menu_array[$i]['url_icon'].'"></div>';
+                                        print '<div class="imatgeMenu"><img src="'.DOL_URL_ROOT.'/responsiveModule/img/menuicon/'.$menu_array[$i]['url_icon'].'"></div>';
                                         
 					print '<div class="divTextSubMenu"><p class="textSubMenu">'.$menu_array[$i]['titre'].'</p></dov;';
 					if ($shorturlwithoutparam) print '</a>';
