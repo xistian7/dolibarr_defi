@@ -44,6 +44,7 @@ require_once DOL_DOCUMENT_ROOT.'/product/class/product.class.php';
 require_once DOL_DOCUMENT_ROOT.'/societe/class/client.class.php';
 require_once DOL_DOCUMENT_ROOT.'/margin/lib/margins.lib.php';
 require_once DOL_DOCUMENT_ROOT.'/multicurrency/class/multicurrency.class.php';
+require_once DOL_DOCUMENT_ROOT.'/basic_lib/productes.php';
 
 if (! empty($conf->accounting->enabled)) require_once DOL_DOCUMENT_ROOT.'/core/class/html.formaccounting.class.php';
 if (! empty($conf->accounting->enabled)) require_once DOL_DOCUMENT_ROOT.'/accountancy/class/accountingaccount.class.php';
@@ -816,6 +817,20 @@ class Facture extends CommonInvoice
 				}
 			}
 
+                        //VASA guardar tècnic ja que per ell sol no ho fa
+                        if (! $error)
+                        {
+                            $sql = "INSERT INTO ".MAIN_DB_PREFIX."facture_extrafields (";
+                            $sql.= "fk_object";
+                            $sql.= ", tecnic_comi";
+                            $sql.= ") ";
+                            $sql.= " VALUES (";
+                            $sql.= $this->id;
+                            $sql.= ", ".$_POST['options_tecnic_comi'];
+                            $sql.= ")";
+                            $result=$this->db->query($sql);
+                        }
+                        
 			if (! $error)
 			{
 
@@ -2493,6 +2508,11 @@ class Facture extends CommonInvoice
 		if (! $error)
 		{
 			$this->db->commit();
+                        
+                        //VASA un cop validada restar estocs i sumar comisions als treballdors
+                        $producteLib = new Productes($this->db);
+                        $producteLib->updateStock($this->id);
+                        
 			return 1;
 		}
 		else
@@ -2500,6 +2520,8 @@ class Facture extends CommonInvoice
 			$this->db->rollback();
 			return -1;
 		}
+                
+                
 	}
 
 	/**

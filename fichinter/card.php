@@ -410,7 +410,7 @@ if (empty($reshook))
 		    	{
 		    		// Extrafields
 		    		$array_options = $extrafields->getOptionalsFromPost($object->table_element);
-
+                                
 		    		$object->array_options = $array_options;
 
 		    		$result = $object->create($user);

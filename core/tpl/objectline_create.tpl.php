@@ -172,8 +172,8 @@ $coldisplay++;
 	<td class="nobottom linecoldescription minwidth300imp">
 
 <?php
-
-$freelines = false;
+//VASA no fem servir FREE lines
+/*$freelines = false;
 if (empty($conf->global->MAIN_DISABLE_FREE_LINES))
 {
 	$freelines = true;
@@ -214,7 +214,7 @@ if (empty($conf->global->MAIN_DISABLE_FREE_LINES))
 	echo $form->select_type_of_lines(isset($_POST["type"])?GETPOST("type", 'alpha', 2):-1, 'type', 1, 1, $forceall);
 
 	echo '</span>';
-}
+}*/
 
 // Predefined product/service
 if (! empty($conf->product->enabled) || ! empty($conf->service->enabled))
@@ -222,8 +222,11 @@ if (! empty($conf->product->enabled) || ! empty($conf->service->enabled))
 	if ($forceall >= 0 && $freelines) echo '<br>';
 	echo '<span class="prod_entry_mode_predef">';
 	echo '<label for="prod_entry_mode_predef">';
-	echo '<input type="radio" class="prod_entry_mode_predef" name="prod_entry_mode" id="prod_entry_mode_predef" value="predef"'.(GETPOST('prod_entry_mode')=='predef'?' checked':'').'> ';
-	if (empty($senderissupplier))
+	//echo '<input type="radio" class="prod_entry_mode_predef" name="prod_entry_mode" id="prod_entry_mode_predef" value="predef"'.(GETPOST('prod_entry_mode')=='predef'?' checked':'').'> ';
+	//VASA selecciones predefinit producte
+        echo '<input type="radio" class="prod_entry_mode_predef" name="prod_entry_mode" id="prod_entry_mode_predef" value="checked"> ';
+	
+        if (empty($senderissupplier))
 	{
 		if (! empty($conf->product->enabled) && empty($conf->service->enabled)) echo $langs->trans('PredefinedProductsToSell');
 		elseif ((empty($conf->product->enabled) && ! empty($conf->service->enabled)) || ($object->element == 'contrat' && empty($conf->global->CONTRACT_SUPPORT_PRODUCTS))) echo $langs->trans('PredefinedServicesToSell');
@@ -419,6 +422,10 @@ if($object->element == 'supplier_proposal' || $object->element == 'order_supplie
 }
 
 $coldisplay++;
+//VASA ficar per defecte valor al descompte
+if(!isset($_POST["remise_percent"])&& $remise_percent == ""){
+    $remise_percent =0;
+}
 ?>
 	<td class="nobottom nowrap linecoldiscount right"><input type="text" size="1" name="remise_percent" id="remise_percent" class="flat right" value="<?php echo (isset($_POST["remise_percent"])?GETPOST("remise_percent", 'alpha', 2):$remise_percent); ?>"><span class="hideonsmartphone">%</span></td>
 <?php

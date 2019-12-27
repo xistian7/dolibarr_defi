@@ -39,6 +39,8 @@
 /**
  *	Parent class of all other business classes (invoices, contracts, proposals, orders, ...)
  */
+require_once DOL_DOCUMENT_ROOT.'/basic_lib/commonobjectvasa.php';
+
 abstract class CommonObject
 {
 	/**
@@ -6727,10 +6729,26 @@ abstract class CommonObject
 
 					$html_id = !empty($this->id) ? $this->element.'_extras_'.$key.'_'.$this->id : '';
                                         //var_dump($key);
+                                        //VASA accions en funcio del tipus d'objecte
                                         if($key == 'servicios2'){
                                                   $out .= '<td id="'.$html_id.'" class="col-md-1 col-md-first '.$this->element.'_extras_'.$key.'">';          
-                                        }elseif($key == 'tecnic'){
-                                                $this->id = 5;
+                                        }elseif($key == 'tecnic' || $key == 'tecnic_comi' ){
+                                            if($value == NULL){
+                                                
+                                                $commonObjectvasa = new CommonObjectvasa($db);
+                                                
+                                                if($key == 'tecnic_comi' && GETPOST('originid')!= null){
+                                                    $value = $commonObjectvasa->getIdTecnicAsignatIntervencio(GETPOST('originid'));
+                                                }
+                                                if(($key == 'tecnic' || $value == NULL) && GETPOST('originid')!= null){
+                                                    $value = $commonObjectvasa->getIdTecnicAsignatTicket(GETPOST('originid'));
+                                                }
+                                                    
+                                                 
+                                            }
+                                                
+                                            $out .= '<td class="tdtop">'.$label.'</td><td id="'.$html_id.'" class="col-md-1 col-md-first '.$this->element.'_extras_'.$key.'">';
+                                        }elseif($key == 'usuario'){
                                             $out .= '<td class="tdtop">'.$label.'</td><td id="'.$html_id.'" class="col-md-1 col-md-first '.$this->element.'_extras_'.$key.'">';
                                         }else{
                                             $out .= '<td id="'.$html_id.'" class="col-md-1 col-md-first '.$this->element.'_extras_'.$key.'">';

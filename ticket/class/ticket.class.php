@@ -327,7 +327,7 @@ class Ticket extends CommonObject
         $error = 0;
 
         // Clean parameters
-        $this->datec = dol_now();
+        //$this->datec = dol_now();
         if (empty($this->track_id)) $this->track_id = generate_random_id(16);
 
         // Check more parameters
@@ -357,7 +357,8 @@ class Ticket extends CommonObject
             $sql .= "date_read,";
             $sql .= "date_close,";
             $sql .= "entity,";
-            $sql .= "notify_tiers_at_create";
+            $sql .= "notify_tiers_at_create,";
+            $sql .= "tms";
             $sql .= ") VALUES (";
             $sql .= " " . (!isset($this->ref) ? '' : "'" . $this->db->escape($this->ref) . "'") . ",";
             $sql .= " " . (!isset($this->track_id) ? 'NULL' : "'" . $this->db->escape($this->track_id) . "'") . ",";
@@ -380,6 +381,7 @@ class Ticket extends CommonObject
             $sql .= " " . (!isset($this->date_close) || dol_strlen($this->date_close) == 0 ? 'NULL' : "'" . $this->db->idate($this->date_close) . "'") . "";
             $sql .= ", " . $conf->entity;
             $sql .= ", " . (!isset($this->notify_tiers_at_create) ? '1' : "'" . $this->db->escape($this->notify_tiers_at_create) . "'");
+            $sql .= ", " . (!isset($object->tms) || dol_strlen($object->tms) == 0 ? 'NULL' : "'" . $this->db->idate($this->tms) . "'") . "";
             $sql .= ")";
 
             $this->db->begin();
@@ -398,10 +400,11 @@ class Ticket extends CommonObject
 
                 if (!$notrigger) {
                     // Call trigger
-                    $result=$this->call_trigger('TICKET_CREATE', $user);
+                    //VASA no crear trigger per crear event cada cop que creem tixket
+                    /*$result=$this->call_trigger('TICKET_CREATE', $user);
                     if ($result < 0) {
                         $error++;
-                    }
+                    }*/
                     // End call triggers
                 }
             }

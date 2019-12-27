@@ -152,7 +152,13 @@ if (GETPOST('add', 'alpha') && $user->rights->ticket->write) {
 
         $object->fk_project = GETPOST('projectid', 'int');
         $object->fk_user_assign = GETPOST('fk_user_assign', 'int');
-
+        
+        //VASA la data creacio que no sigui automatica
+        $dataSelect = substr(GETPOST('datec'),6,4).'-'.substr(GETPOST('datec'),3,2).'-'.substr(GETPOST('datec'),0,2).' '.GETPOST('datechour').':'.GETPOST('datecmin').':00';
+        $object->datec = strtotime($dataSelect);
+        $object->tms = $object->datec;
+        
+        
         $extrafields = new ExtraFields($db);
         $extralabels = $extrafields->fetch_name_optionals_label($object->table_element);
         $ret = $extrafields->setOptionalsFromPost($extralabels, $object);
@@ -212,7 +218,8 @@ if (GETPOST('add', 'alpha') && $user->rights->ticket->write) {
                 $fichinter->modelpdf = 'soleil';
                 $fichinter->origin = $object->element;
                 $fichinter->origin_id = $object->id;
-
+                $ficheinter->datec = $object->datec;
+                
                 // Extrafields
                 $extrafields = new ExtraFields($db);
                 $extralabels = $extrafields->fetch_name_optionals_label($fichinter->table_element);

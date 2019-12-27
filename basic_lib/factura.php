@@ -39,6 +39,17 @@ class Factura
         $idproj = $resql->fetch_assoc();
         return $idproj;
     }
+    
+    /*VASA recaldular totals i linies factura*/
+    public function updateFactura($idFactura){
+        
+        $sql = 'SELECT PROD.*,FICHDET.cantidad2,FICHDET.descuento2 FROM `llx_fichinterdet_extrafields` as FICHDET ';
+        $sql = $sql.'LEFT JOIN `llx_product` AS PROD ON FICHDET.servicios2 = PROD.rowid ';
+        $sql = $sql. 'WHERE FICHDET.fk_object = '.$idLiniaIntervenció;
+        $resql = $this->db->query($sql);
+        $idproj = $resql->fetch_assoc();
+        return $idproj;
+    }
 }
 ?>
 

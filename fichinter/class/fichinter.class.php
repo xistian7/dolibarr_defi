@@ -273,10 +273,11 @@ class Fichinter extends CommonObject
 				$resql=$this->db->query($sql);
 				if (! $resql) $error++;
 			}
-
+                       
 			if (! $error && empty($conf->global->MAIN_EXTRAFIELDS_DISABLED))
 			{
 				$result=$this->insertExtraFields();
+                                 
 				if ($result < 0)
 				{
 					$error++;
@@ -294,11 +295,27 @@ class Fichinter extends CommonObject
 			if (! $error && ! $notrigger)
 			{
 				// Call trigger
-				$result=$this->call_trigger('FICHINTER_CREATE', $user);
-				if ($result < 0) { $error++; }
+                            
+                            //VASA no cridat Triguer de crear event quan creem una intervencio
+				/*$result=$this->call_trigger('FICHINTER_CREATE', $user);
+				if ($result < 0) { $error++; }*/
 				// End call triggers
 			}
-
+                        
+                        //VASA guardar tècnic ja que per ell sol no ho fa
+                        if (! $error)
+			{
+                            $sql = "INSERT INTO ".MAIN_DB_PREFIX."fichinter_extrafields (";
+                            $sql.= "fk_object";
+                            $sql.= ", tecnic";
+                            $sql.= ") ";
+                            $sql.= " VALUES (";
+                            $sql.= $this->id;
+                            $sql.= ", ".$_POST['options_tecnic'];
+                            $sql.= ")";
+                            $result=$this->db->query($sql);
+                        }
+                        
 			if (! $error)
 			{
 				$this->db->commit();

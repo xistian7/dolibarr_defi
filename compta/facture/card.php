@@ -52,6 +52,7 @@ require_once DOL_DOCUMENT_ROOT.'/core/lib/date.lib.php';
 require_once DOL_DOCUMENT_ROOT.'/core/class/extrafields.class.php';
 require_once DOL_DOCUMENT_ROOT.'/basic_lib/resolucio_incidencies.php';
 require_once DOL_DOCUMENT_ROOT.'/basic_lib/factura.php';
+require_once DOL_DOCUMENT_ROOT.'/basic_lib/productes.php';
 $facturaLlibreria = new Factura($db);
 if (!empty($conf->commande->enabled))
 	require_once DOL_DOCUMENT_ROOT.'/commande/class/commande.class.php';
@@ -706,6 +707,9 @@ if (empty($reshook))
 					}
 				}
 			}
+                        //VASA un cop reoberta la factura sumar estocs i restar comisions als treballdors
+                        $producteLib = new Productes($db);
+                        $producteLib->sumStock($object->id);
 		}
 	}
 
