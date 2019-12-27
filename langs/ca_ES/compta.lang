@@ -1,5 +1,5 @@
 # Dolibarr language file - Source file is en_US - compta
-MenuFinancial=Financera
+MenuFinancial=Facturació
 TaxModuleSetupToModifyRules=Ves a la <a href="%s">Configuració mòdul impostos</a> per modificar les regles de càlcul
 TaxModuleSetupToModifyRulesLT=Ves a la <a href="%s">Configuració de l'empresa</a> per modificar les regles de càlcul
 OptionMode=Opció de gestió comptable
