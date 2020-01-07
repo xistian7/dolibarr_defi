@@ -99,11 +99,13 @@ class modResponsiveModule extends DolibarrModules
                 '/responsiveModule/css/bootstrap.css',
                 '/responsiveModule/css/bootstrap-grid.css',
                 '/responsiveModule/css/bootstrap-reboot.css',
+                '/responsiveModule/css/datatables.css',
             ),
             // Set this to relative path of js file if module must load a js on all pages
             'js' => array(
                 '/responsiveModule/js/bootstrap.js',
                 '/responsiveModule/js/bootstrap-bundle.js',
+                '/responsiveModule/js/datatables.js',
                 //   '/responsivemodule/js/responsivemodule.js.php',
             ),
             // Set here all hooks context managed by module. To find available hook context, make a "grep -r '>initHooks(' *" on source code. You can also set hook context to 'all'

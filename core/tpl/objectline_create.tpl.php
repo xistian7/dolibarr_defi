@@ -31,7 +31,7 @@
  * $senderissupplier (0 by default, 1 or 2 for supplier invoices/orders)
  * $inputalsopricewithtax (0 by default, 1 to also show column with unit price including tax)
  */
-
+require_once DOL_DOCUMENT_ROOT.'/basic_lib/productes.php';
 // Protection to avoid direct call of template
 if (empty($object) || !is_object($object)) {
     print "Error: this template page cannot be called directly as an URL";
@@ -296,8 +296,71 @@ if (! empty($conf->product->enabled) || ! empty($conf->service->enabled))
 	        $alsoproductwithnosupplierprice=1;
 	    }
 
-	    $form->select_produits_fournisseurs($object->socid, GETPOST('idprodfournprice'), 'idprodfournprice', '', '', $ajaxoptions, 1, $alsoproductwithnosupplierprice, 'maxwidth300');
-
+	    
+            //VASA crear un sou seleccionable per als productes
+            //$form->select_produits_fournisseurs($object->socid, GETPOST('idprodfournprice'), 'idprodfournprice', '', '', $ajaxoptions, 1, $alsoproductwithnosupplierprice, 'maxwidth300');
+            ?><!-- Button trigger modal -->
+            <input type="hidden" name="idprodfournprice" id="idprodfournprice" value="">
+            <div class="selecionarProducte">
+                <p id="refProducteSelecionar"></p>
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#basicExampleModal">
+              Buscar
+            </button>
+            </div>
+            <!-- Modal -->
+            <div class="modal fade" id="basicExampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+              aria-hidden="true">
+              <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Productes</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body">
+                    <table id="dtBasicExample" class="table table-striped table-bordered table-sm" cellspacing="0" width="100%">
+                        <thead>
+                          <tr>
+                            <th class="th-sm">ID
+                            </th>
+                            <th class="th-sm">REF
+                            </th>
+                            <th class="th-sm">Nom
+                            </th>
+                            <th class="th-sm">Descripció
+                            </th>
+                            <th class="th-sm">PMP
+                            </th>
+                            <th class="th-sm">
+                            </th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                            <?php 
+                            $productes = new Productes($this->db);
+                            //var_dump($productes->getAllProductsPerComprar()); die();
+                                foreach ($productes->getAllProductsPerComprar() as $producte) {
+                                    echo '<tr  class="clickable-row">';
+                                        echo '<td>'.$producte['rowid'].'</td>';
+                                        echo '<td>'.$producte['ref'].'</td>';
+                                        echo '<td>'.$producte['label'].'</td>';
+                                        echo '<td style ="widht:50%;">'.$producte['description'].'</td>';
+                                        echo '<td>'.$producte['omo'].'</td>';
+                                        echo '<td><button type="button" class="btn btn-primary botoSeleccionaProducte" data="'.$producte['ref'].'" value="idprod_'.$producte['rowid'].'">Seleccionar</button></td>';
+                                      echo '</tr>';
+                                }
+                            ?>
+                        </tbody>
+                    </table>
+                  </div>
+                  <div class="modal-footer">
+                    <button onclick="location.href='<?= DOL_MAIN_URL_ROOT ?>/product/card.php?leftmenu=product&action=create&type=0'" type="button" class="btn btn-primary" >Nou producte</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <?php
 	    if (! empty($conf->global->MAIN_AUTO_OPEN_SELECT2_ON_FOCUS_FOR_SUPPLIER_PRODUCTS))
 	    {
 		    ?>
@@ -597,6 +660,18 @@ if (! empty($usemargins) && $user->rights->margins->creer)
 
 /* JQuery for product free or predefined select */
 jQuery(document).ready(function() {
+    /*VASA crear taula amb buscador*/
+    jQuery('#dtBasicExample').DataTable();
+    jQuery('.dataTables_length').addClass('bs-select');
+    jQuery('.botoSeleccionaProducte').click();
+    $('.botoSeleccionaProducte').click(function(){
+        $('#idprodfournprice').val($(this).attr("value"));
+        $('#refProducteSelecionar').text('REF: '+$(this).attr("data"));
+        $('#refProducteSelecionar').addClass("prodSeleccionat");
+        $('#idprodfournprice').val($(this).attr("value"));
+        $('#basicExampleModal').modal('toggle'); 
+    });
+
 	jQuery("#price_ht").keyup(function(event) {
 		// console.log(event.which);		// discard event tag and arrows
 		if (event.which != 9 && (event.which < 37 ||event.which > 40) && jQuery("#price_ht").val() != '') {
@@ -858,6 +933,7 @@ function setforpredef() {
 	jQuery("#buying_price").show();
 	jQuery('#trlinefordates, .divlinefordates').show();
 }
+
 
 </script>
 

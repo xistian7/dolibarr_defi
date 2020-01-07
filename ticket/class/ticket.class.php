@@ -26,8 +26,8 @@
 require_once DOL_DOCUMENT_ROOT . "/core/class/commonobject.class.php";
 require_once DOL_DOCUMENT_ROOT . '/fichinter/class/fichinter.class.php';
 require_once DOL_DOCUMENT_ROOT . '/core/lib/ticket.lib.php';
-
-
+require_once DOL_DOCUMENT_ROOT.'/basic_lib/mail.php';
+require_once DOL_DOCUMENT_ROOT.'/basic_lib/usuari.php';
 /**
  *    Class to manage ticket
  */
@@ -430,6 +430,23 @@ class Ticket extends CommonObject
             } else {
                 
                 $this->db->commit();
+                
+                //VASA comprovarem si el creador i el tècnic assignat son el mateix, si no ho son enviarem email avisant a qui el te asigant
+                if($this->fk_user_create != $this->fk_user_assign){
+                    
+                    $userAsign = new Usuari($this->db);
+                    $usariDesti = $userAsign->getEmailById($this->fk_user_assign);
+                    
+                    $capcalera = "DEFI - Tens un nou tiquet asignat : ".$this->ref;
+                    
+                    $missatge = 'Tens un nou tíquet assignat : <a href="'.DOL_MAIN_URL_ROOT.'/ticket/card.php?id='.$this->id.'&save_lastsearch_values=1">'.$this->ref.'</a><br/>';
+                    $missatge = $missatge.'Títol : '.$this->subject.'<br/>';
+                    $missatge = $missatge.'Descripció : '.$this->message.'<br/>';
+                    //VASA de moment no enviarem emails
+                    //Mail::sendEmail("", $usariDesti, $capcalera, $missatge);
+                    
+                }
+                
                 return $this->id;
             }
         } else {

@@ -48,6 +48,14 @@ class Intervencio
         $idproj = $resql->fetch_assoc()["descuento2"];
         return $idproj;
     }
+    
+    /*VASA canviar l'estat d'una intervencio per el seu id*/
+    public function setStateByID($idIntervencio){
+        $sql = "UPDATE `llx_fichinter` SET fk_statut = 2 WHERE rowid = ".$idIntervencio.";";
+        $resql = $this->db->query($sql);
+        
+        return $resql;
+    }
 }
 ?>
 
