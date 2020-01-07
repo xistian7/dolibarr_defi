@@ -29,7 +29,7 @@
  */
 require_once DOL_DOCUMENT_ROOT .'/core/class/commonobject.class.php';
 require_once DOL_DOCUMENT_ROOT .'/core/class/commonobjectline.class.php';
-
+require_once DOL_DOCUMENT_ROOT.'/basic_lib/ticketvasa.php';
 
 /**
  *	Class to manage interventions
@@ -319,6 +319,12 @@ class Fichinter extends CommonObject
 			if (! $error)
 			{
 				$this->db->commit();
+                                //VASA un cop guardada la intervenció tanqueme el ticket pertinent
+                                if($_POST['originid'] != ""){
+                                    $ticketvasa = new Ticketvasa($this->db);
+                                    $ticketvasa->setStateByID($_POST['originid']);
+                                }
+                                
 				return $this->id;
 			}
 			else
@@ -737,16 +743,16 @@ class Fichinter extends CommonObject
 
 			$this->statuts[0]=$langs->trans('Draft');
 			$this->statuts[1]=$langs->trans('Validated');
-			$this->statuts[2]=$langs->trans('StatusInterInvoiced');
-//			$this->statuts[3]=$langs->trans('Done');
+			$this->statuts[2]=$langs->trans('Billed');
+			$this->statuts[3]=$langs->trans('Fet');
 			$this->statuts_short[0]=$langs->trans('Draft');
 			$this->statuts_short[1]=$langs->trans('Validated');
-			$this->statuts_short[2]=$langs->trans('StatusInterInvoiced');
-//			$this->statuts_short[3]=$langs->trans('Done');
+			$this->statuts_short[2]=$langs->trans('Billed');
+			$this->statuts_short[3]=$langs->trans('Fet');
 			$this->statuts_logo[0]='statut0';
-			$this->statuts_logo[1]='statut1';
-			$this->statuts_logo[2]='statut6';
-//			$this->statuts_logo[3]='statut6';
+			$this->statuts_logo[1]='statut3';
+			$this->statuts_logo[2]='statut4';
+			$this->statuts_logo[3]='statut1';
 		}
 
 		if ($mode == 0)
@@ -756,7 +762,7 @@ class Fichinter extends CommonObject
 		elseif ($mode == 2)
 			return img_picto($this->statuts_short[$statut], $this->statuts_logo[$statut]).' '.$this->statuts_short[$statut];
 		elseif ($mode == 3)
-			return img_picto($this->statuts_short[$statut], $this->statuts_logo[$statut]);
+			return $this->statuts_short[$statut];
 		elseif ($mode == 4)
 			return img_picto($this->statuts_short[$statut], $this->statuts_logo[$statut]).' '.$this->statuts[$statut];
 		elseif ($mode == 5)

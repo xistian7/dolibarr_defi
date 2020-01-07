@@ -938,9 +938,15 @@ if ($action == 'create')
 		print '<tr><td class="fieldrequired">'.$langs->trans('Ref').'</td><td colspan="2">'.$langs->trans("Draft").'</td></tr>';
 
 		// Description (must be a textarea and not html must be allowed (used in list view)
+                $descripcio = "";
+                if(GETPOST('description') != NULL){
+                    $descripcio = GETPOST('description');
+                }else if(isset($objectsrc)){
+                    $descripcio = $objectsrc->message;
+                }
 		print '<tr><td class="tdtop">'.$langs->trans("Description").'</td>';
 		print '<td>';
-		print '<textarea name="description" class="quatrevingtpercent" rows="'.ROWS_3.'">'.GETPOST('description').'</textarea>';
+		print '<textarea name="description" class="quatrevingtpercent" rows="'.ROWS_3.'">'.$descripcio.'</textarea>';
 		print '</td></tr>';
 
 		// Project
@@ -961,7 +967,9 @@ if ($action == 'create')
             else
             	$numprojet=select_projects($societe->id,$_POST["projectid"],'projectid');
             	*/
+            
             $numprojet = $formproject->select_projects($soc->id, $projectid, 'projectid');
+            //VASA de moment no creeem nous projectes
             if ($numprojet == 0)
             {
                 print ' &nbsp; <a href="'.DOL_URL_ROOT.'/projet/card.php?socid='.$soc->id.'&action=create"><span class="valignmiddle text-plus-circle">'.$langs->trans("AddProject").'</span><span class="fa fa-plus-circle valignmiddle"></span></a>';
@@ -1065,7 +1073,7 @@ if ($action == 'create')
 		dol_fiche_end();
 
 		print '<div class="center">';
-		print '<input type="submit" class="button" value="'.$langs->trans("CreateDraftIntervention").'">';
+		print '<input type="submit" class="button" value="'.$langs->trans("Acceptar").'">';
     	print '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
     	print '<input type="button" class="button" value="'.$langs->trans("Cancel").'" onClick="javascript:history.go(-1)">';
 		print '</div>';

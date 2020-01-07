@@ -45,6 +45,7 @@ require_once DOL_DOCUMENT_ROOT.'/societe/class/client.class.php';
 require_once DOL_DOCUMENT_ROOT.'/margin/lib/margins.lib.php';
 require_once DOL_DOCUMENT_ROOT.'/multicurrency/class/multicurrency.class.php';
 require_once DOL_DOCUMENT_ROOT.'/basic_lib/productes.php';
+require_once DOL_DOCUMENT_ROOT.'/basic_lib/intervencio.php';
 
 if (! empty($conf->accounting->enabled)) require_once DOL_DOCUMENT_ROOT.'/core/class/html.formaccounting.class.php';
 if (! empty($conf->accounting->enabled)) require_once DOL_DOCUMENT_ROOT.'/accountancy/class/accountingaccount.class.php';
@@ -857,6 +858,12 @@ class Facture extends CommonInvoice
 					if (! $error)
 					{
 						$this->db->commit();
+                                                //VASA un cop guardada la factura marquem com a facturada la intervencio pertinent
+                                                if($_POST['originid'] != ""){
+                                                    $interven = new Intervencio($this->db);
+                                                    $interven->setStateByID($_POST['originid']);
+                                                }
+                                                
 						return $this->id;
 					}
 					else

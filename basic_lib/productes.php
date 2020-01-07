@@ -42,6 +42,19 @@ class Productes
         
         return $idFactura;
     }
+    
+    /*VASA retorna tots els productes que estan disponibles per comprar*/
+    public function getAllProductsPerComprar(){
+        $sql = 'SELECT * FROM `llx_product` WHERE fk_product_type = 0';
+        $resql = $this->db->query($sql);
+        $i=0;
+        $productes = NULL;
+        while ($fila = $resql->fetch_assoc()) {
+            $productes[$i] = $fila;
+            $i++;
+        }
+        return $productes;
+    }
 
 }
 ?>
