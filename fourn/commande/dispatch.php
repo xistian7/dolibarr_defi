@@ -817,7 +817,7 @@ if ($id > 0 || ! empty($ref)) {
 
                     print '<input type="checkbox" checked="checked" name="closeopenorder"> '.$checkboxlabel;
                 }
-                empty($conf->reception->enabled)?$dispatchBt=$langs->trans("DispatchVerb"):$dispatchBt=$langs->trans("Receive");
+                empty($conf->reception->enabled)?$dispatchBt=$langs->trans("Receive"):$dispatchBt=$langs->trans("Receive");
 
                 print '<br><input type="submit" class="button" name="dispatch" value="' . dol_escape_htmltag($dispatchBt). '"';
                 if (count($listwarehouses) <= 0)
@@ -977,6 +977,7 @@ if ($id > 0 || ! empty($ref)) {
 				}
 					print '</td>';
 					print '<td class="center">';
+                                        print '<button class="btn botoDelete" value="'.$objp->dispatchlineid.'" ><i class="fa fa-trash"></i></button>';
 					print '</td>';
 
 

@@ -404,7 +404,8 @@ if ($action == "confirm_close" && GETPOST('confirm', 'alpha') == 'yes' && $user-
     if ($object->close($user)) {
         setEventMessages($langs->trans('TicketMarkedAsClosed'), null, 'mesgs');
 
-        $url = 'card.php?action=view&track_id=' . GETPOST('track_id', 'alpha');
+        //VASA canvi de redireccio $url = 'card.php?action=view&track_id=' . GETPOST('track_id', 'alpha');
+        $url = './list.php?mode=mine&search_fk_status=non_closed&idmenu=5&mainmenu=ticket&leftmenu=';
         header("Location: " . $url);
     } else {
         $action = '';

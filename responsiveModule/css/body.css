@@ -30,6 +30,10 @@ form{
     background: transparent !important;
 }
 
+.formTicket .tabBarWithBottom{
+    background: transparent !important;
+}
+
 table.dataTable thead .sorting:after,
 table.dataTable thead .sorting:before,
 table.dataTable thead .sorting_asc:after,

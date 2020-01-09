@@ -61,8 +61,8 @@ class modResponsiveModule extends DolibarrModules
         $this->description = "ResponsiveModuleDescription";
         // Used only if file README.md and README-LL.md not found.
         $this->descriptionlong = "ResponsiveModule description (Long)";
-        $this->editor_name = 'Editor name';
-        $this->editor_url = 'https://www.example.com';
+        $this->editor_name = 'Cristian Valles';
+        $this->editor_url = 'https://www.defi.ad';
         // Possible values for version are: 'development', 'experimental', 'dolibarr', 'dolibarr_deprecated' or a version string like 'x.y.z'
         $this->version = '1.0';
         // Url to the file with your last numberversion of this module
@@ -106,6 +106,8 @@ class modResponsiveModule extends DolibarrModules
                 '/responsiveModule/js/bootstrap.js',
                 '/responsiveModule/js/bootstrap-bundle.js',
                 '/responsiveModule/js/datatables.js',
+                '/responsiveModule/js/popper.min.js',
+                '/responsiveModule/js/custom.js',
                 //   '/responsivemodule/js/responsivemodule.js.php',
             ),
             // Set here all hooks context managed by module. To find available hook context, make a "grep -r '>initHooks(' *" on source code. You can also set hook context to 'all'

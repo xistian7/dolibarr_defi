@@ -26,6 +26,14 @@ class Usuari
         return $email;
     }
     
+    /*VASA retorna l'email de l'usuari segons el seu id*/
+    public function getNumTicketsPendentsLlegirById($rowid){
+        $sql = 'SELECT count(*) FROM `llx_ticket` WHERE fk_user_assign = '.$rowid.' AND fk_statut = 0';
+        $resql = $this->db->query($sql);
+        $num = $resql->fetch_assoc()["count(*)"];
+        return $num;
+    }
+    
 }
 ?>
 

@@ -68,7 +68,8 @@ $mesg=''; $error=0; $errors=array();
 $refalreadyexists=0;
 
 $id=GETPOST('id', 'int');
-$ref=GETPOST('ref', 'alpha');
+//VASA la ref = al id
+$ref=strtotime(date('Y-m-d H:i:s'));
 $type=GETPOST('type', 'int');
 $action=(GETPOST('action', 'alpha') ? GETPOST('action', 'alpha') : 'view');
 $cancel=GETPOST('cancel', 'alpha');
@@ -216,6 +217,10 @@ if (empty($reshook))
 
             $object->ref                   = $ref;
             $object->label                 = GETPOST('label');
+            $object->description        	 = dol_htmlcleanlastbr(GETPOST('desc', 'none'));
+            //VASA la descripcio = nom si esta buida
+            if($object->description == ""){$object->description = $object->label;}
+            
             $object->price_base_type       = GETPOST('price_base_type');
 
             if ($object->price_base_type == 'TTC')
@@ -287,7 +292,7 @@ if (empty($reshook))
             $object->barcode_type_coder     = $stdobject->barcode_type_coder;
             $object->barcode_type_label     = $stdobject->barcode_type_label;
 
-            $object->description        	 = dol_htmlcleanlastbr(GETPOST('desc', 'none'));
+            
             $object->url					 = GETPOST('url');
             $object->note_private          	 = dol_htmlcleanlastbr(GETPOST('note_private', 'none'));
             $object->note               	 = $object->note_private;   // deprecated
@@ -912,8 +917,8 @@ else
         }
 
         dol_set_focus('input[name="ref"]');
-
-        print '<form action="'.$_SERVER["PHP_SELF"].'" method="POST">';
+        
+        print '<form action="'.$_SERVER["PHP_SELF"].'" method="POST" class="formTicket">';
         print '<input type="hidden" name="token" value="'.$_SESSION['newtoken'].'">';
         print '<input type="hidden" name="action" value="add">';
         print '<input type="hidden" name="type" value="'.$type.'">'."\n";
@@ -928,30 +933,33 @@ else
         print load_fiche_titre($title, $linkback, 'title_products.png');
 
         dol_fiche_head('');
-
+        print '<div class="row">';
+        print '<div class="col-md-6">';
         print '<table class="border centpercent">';
-
-        print '<tr>';
+        print '<input type="hidden" name="ref" value="1">';
+        /*VASA REF la ficare automaticaprint '<tr>';
         $tmpcode='';
 		if (! empty($modCodeProduct->code_auto)) $tmpcode=$modCodeProduct->getNextValue($object, $type);
-        print '<td class="titlefieldcreate fieldrequired">'.$langs->trans("Ref").'</td><td colspan="3"><input id="ref" name="ref" class="maxwidth200" maxlength="128" value="'.dol_escape_htmltag(GETPOST('ref')?GETPOST('ref'):$tmpcode).'">';
+        
+                
+         * print '<td class="titlefieldcreate fieldrequired">'.$langs->trans("Ref").'</td><td colspan="3"><input id="ref" name="ref" class="maxwidth200" maxlength="128" value="'.dol_escape_htmltag(GETPOST('ref')?GETPOST('ref'):$tmpcode).'">';
         if ($refalreadyexists)
         {
             print $langs->trans("RefAlreadyExists");
         }
-        print '</td></tr>';
+        print '</td></tr>';*/
 
         // Label
-        print '<tr><td class="fieldrequired">'.$langs->trans("Label").'</td><td colspan="3"><input name="label" class="minwidth300 maxwidth400onsmartphone" maxlength="255" value="'.dol_escape_htmltag(GETPOST('label')).'"></td></tr>';
+        print '<tr><td class="fieldrequired" style="width: 7% !important;">'.$langs->trans("Label").'</td><td colspan="3"><input name="label" class="minwidth300 maxwidth400onsmartphone" maxlength="255" value="'.dol_escape_htmltag(GETPOST('label')).'"></td></tr>';
 
         // On sell
-        print '<tr><td class="fieldrequired">'.$langs->trans("Status").' ('.$langs->trans("Sell").')</td><td colspan="3">';
+        print '<tr><td class="fieldrequired">'.$langs->trans("Status").' ('.$langs->trans("Sell").')</td><td>';
         $statutarray=array('1' => $langs->trans("OnSell"), '0' => $langs->trans("NotOnSell"));
         print $form->selectarray('statut', $statutarray, GETPOST('statut'));
         print '</td></tr>';
 
         // To buy
-        print '<tr><td class="fieldrequired">'.$langs->trans("Status").' ('.$langs->trans("Buy").')</td><td colspan="3">';
+        print '<tr><td class="fieldrequired">'.$langs->trans("Status").' ('.$langs->trans("Buy").')</td><td>';
         $statutarray=array('1' => $langs->trans("ProductStatusOnBuy"), '0' => $langs->trans("ProductStatusNotOnBuy"));
         print $form->selectarray('statut_buy', $statutarray, GETPOST('statut_buy'));
         print '</td></tr>';
@@ -982,7 +990,7 @@ else
 	        require_once DOL_DOCUMENT_ROOT.'/core/class/html.formbarcode.class.php';
             $formbarcode = new FormBarCode($db);
             print $formbarcode->selectBarcodeType($fk_barcode_type, 'fk_barcode_type', 1);
-	        print '</td><td>'.$langs->trans("BarcodeValue").'</td><td>';
+	        print '</td></tr></tr><td>'.$langs->trans("BarcodeValue").'</td><td>';
 	        $tmpcode=isset($_POST['barcode'])?GETPOST('barcode'):$object->barcode;
 	        if (empty($tmpcode) && ! empty($modBarCodeProduct->code_auto)) $tmpcode=$modBarCodeProduct->getNextValue($object, $type);
 	        print '<input class="maxwidth100" type="text" name="barcode" value="'.dol_escape_htmltag($tmpcode).'">';
@@ -996,8 +1004,8 @@ else
         $doleditor->Create();
 
         print "</td></tr>";
-
-        // Public URL
+        /*VASA eliminar coses per DEFI*/
+        /* Public URL
         print '<tr><td>'.$langs->trans("PublicUrl").'</td><td colspan="3">';
 		print '<input type="text" name="url" class="quatrevingtpercent" value="'.GETPOST('url').'">';
         print '</td></tr>';
@@ -1092,7 +1100,7 @@ else
 	        print $form->select_country(GETPOST('country_id', 'int'), 'country_id');
 	        if ($user->admin) print info_admin($langs->trans("YouCanChangeValuesForThisListFromDictionarySetup"), 1);
 	        print '</td></tr>';
-        }
+        }*/
 
         // Other attributes
         $parameters=array('colspan' => 3);
@@ -1106,27 +1114,13 @@ else
         // Note (private, no output on invoices, propales...)
         //if (! empty($conf->global->MAIN_DISABLE_NOTES_TAB))       available in create mode
         //{
-            print '<tr><td class="tdtop">'.$langs->trans("NoteNotVisibleOnBill").'</td><td colspan="3">';
-
-            // We use dolibarr_details as type of DolEditor here, because we must not accept images as description is included into PDF and not accepted by TCPDF.
-            $doleditor = new DolEditor('note_private', GETPOST('note_private', 'none'), '', 140, 'dolibarr_details', '', false, true, $conf->global->FCKEDITOR_ENABLE_PRODUCTDESC, ROWS_8, '90%');
-    	    $doleditor->Create();
-
-            print "</td></tr>";
-        //}
-
-		if ($conf->categorie->enabled) {
-			// Categories
-			print '<tr><td>'.$langs->trans("Categories").'</td><td colspan="3">';
-			$cate_arbo = $form->select_all_categories(Categorie::TYPE_PRODUCT, '', 'parent', 64, 0, 1);
-			print $form->multiselectarray('categories', $cate_arbo, GETPOST('categories', 'array'), '', 0, '', 0, '100%');
-			print "</td></tr>";
-		}
+            
 
         print '</table>';
 
         print '<br>';
-
+        print '</div>';
+        print '<div class="col-md-6">';
         if (! empty($conf->global->PRODUIT_MULTIPRICES))
         {
             // We do no show price array on create when multiprices enabled.
@@ -1239,6 +1233,22 @@ else
 			print '<td class="maxwidthonsmartphone"><input class="minwidth100" name="accountancy_code_buy" value="'.$object->accountancy_code_buy.'">';
 			print '</td></tr>';
 		}
+                print '<tr><td class="tdtop">'.$langs->trans("NoteNotVisibleOnBill").'</td><td colspan="3">';
+
+            // We use dolibarr_details as type of DolEditor here, because we must not accept images as description is included into PDF and not accepted by TCPDF.
+            $doleditor = new DolEditor('note_private', GETPOST('note_private', 'none'), '', 140, 'dolibarr_details', '', false, true, $conf->global->FCKEDITOR_ENABLE_PRODUCTDESC, ROWS_8, '90%');
+    	    $doleditor->Create();
+
+            print "</td></tr>";
+        //}
+
+		if ($conf->categorie->enabled) {
+			// Categories
+			print '<tr><td>'.$langs->trans("Categories").'</td><td colspan="3">';
+			$cate_arbo = $form->select_all_categories(Categorie::TYPE_PRODUCT, '', 'parent', 64, 0, 1);
+			print $form->multiselectarray('categories', $cate_arbo, GETPOST('categories', 'array'), '', 0, '', 0, '100%');
+			print "</td></tr>";
+		}
 		print '</table>';
 
 		dol_fiche_end();
@@ -1248,8 +1258,10 @@ else
 		print ' &nbsp; &nbsp; ';
 		print '<input type="button" class="button" value="' . $langs->trans("Cancel") . '" onClick="javascript:history.go(-1)">';
 		print '</div>';
-
+                print '</div>';
+                print '</div>';
 		print '</form>';
+                
 	}
 
     /*
@@ -1570,8 +1582,10 @@ else
 			print '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
 			print '<input type="submit" class="button" name="cancel" value="'.$langs->trans("Cancel").'">';
 			print '</div>';
-
+                        print '</div>';
+                        print '</div>';
 			print '</form>';
+                        
 		}
         // Fiche en mode visu
         else
@@ -1655,7 +1669,10 @@ else
 					print '<input type="hidden" name="barcode_type_code" value="'.$object->barcode_type_code.'">';
 					print '<input size="40" class="maxwidthonsmartphone" type="text" name="barcode" value="'.$tmpcode.'">';
 					print '&nbsp;<input type="submit" class="button" value="'.$langs->trans("Modify").'">';
-					print '</form>';
+					print '</div>';
+                                        print '</div>';
+                                        print '</form>';
+                                        
                 }
                 else
                 {
@@ -2140,7 +2157,8 @@ if (! empty($conf->global->PRODUCT_ADD_FORM_ADD_TO) && $object->id && ($action =
         print '</div>';
 
         dol_fiche_end();
-
+        print '</div>';
+        print '</div>';
         print '</form>';
     }
 }

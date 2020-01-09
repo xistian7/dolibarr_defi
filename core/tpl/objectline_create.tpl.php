@@ -94,7 +94,9 @@ if (!empty($extrafields))
 print "<!-- BEGIN PHP TEMPLATE objectline_create.tpl.php -->\n";
 $nolinesbefore=(count($this->lines) == 0 || $forcetoshowtitlelines);
 if ($nolinesbefore) {
-	?>
+
+        include("objectline_title.tpl.php");
+	/*VASA fem servri la capçalera normal sempre?>
 <tr class="liste_titre<?php echo (($nolinesbefore || $object->element=='contrat')?'':' liste_titre_add_') ?> nodrag nodrop">
 	<?php if (! empty($conf->global->MAIN_VIEW_LINE_NUMBER)) { ?>
 	<td class="linecolnum center"></td>
@@ -154,7 +156,7 @@ if ($nolinesbefore) {
 	?>
 	<td class="linecoledit" colspan="<?php echo $colspan; ?>">&nbsp;</td>
 </tr>
-	<?php
+	<?php*/
 }
 ?>
 <tr class="pair nodrag nodrop nohoverpair<?php echo ($nolinesbefore || $object->element=='contrat')?'':' liste_titre_create'; ?>">
@@ -663,8 +665,8 @@ jQuery(document).ready(function() {
     /*VASA crear taula amb buscador*/
     jQuery('#dtBasicExample').DataTable();
     jQuery('.dataTables_length').addClass('bs-select');
-    jQuery('.botoSeleccionaProducte').click();
-    $('.botoSeleccionaProducte').click(function(){
+    /*$('.botoSeleccionaProducte').click(function(){*/
+    $('#tablelines tbody').on('click', '.botoSeleccionaProducte', function () {
         $('#idprodfournprice').val($(this).attr("value"));
         $('#refProducteSelecionar').text('REF: '+$(this).attr("data"));
         $('#refProducteSelecionar').addClass("prodSeleccionat");

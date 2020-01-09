@@ -1005,7 +1005,7 @@ if ($action == 'create')
         $doleditor = new DolEditor('note_public', $note_public, '', 80, 'dolibarr_notes', 'In', 0, false, true, ROWS_3, '90%');
         print $doleditor->Create(1);
         //print '<textarea name="note_public" cols="80" rows="'.ROWS_3.'">'.$note_public.'</textarea>';
-        print '</td></tr>';
+        print '</td></tr>';*/
 
         // Private note
         if (empty($user->socid))
@@ -1017,7 +1017,7 @@ if ($action == 'create')
         	print $doleditor->Create(1);
         	//print '<textarea name="note_private" cols="80" rows="'.ROWS_3.'">'.$note_private.'</textarea>';
         	print '</td></tr>';
-        }*/
+        }
 
         // Other attributes
         $parameters = array('colspan' => ' colspan="2"');
@@ -1345,23 +1345,34 @@ elseif ($id > 0 || !empty($ref))
 
     print '</div>';
     print '<div class="fichehalfright">';
-    print '<div class="ficheaddleft">';
-    print '<div class="underbanner clearboth"></div>';
+        print '<div class="ficheaddleft">';
+            print '<div class="underbanner clearboth"></div>';
 
-    print '<table class="border tableforfield centpercent">';
+                print '<table class="border tableforfield centpercent">';
 
-    if (empty($conf->global->FICHINTER_DISABLE_DETAILS))
-    {
-        // Duration
-        print '<tr><td class="titlefield">'.$langs->trans("TotalDuration").'</td>';
-        print '<td>'.convertSecondToTime($object->duration, 'all', $conf->global->MAIN_DURATION_OF_WORKDAY).'</td>';
-        print '</tr>';
-    }
+                if (empty($conf->global->FICHINTER_DISABLE_DETAILS))
+                {
+                    //VASA no fem servir duració
+                    // Duration
+                    /*print '<tr><td class="titlefield">'.$langs->trans("TotalDuration").'</td>';
+                    print '<td>'.convertSecondToTime($object->duration, 'all', $conf->global->MAIN_DURATION_OF_WORKDAY).'</td>';
+                    print '</tr>';*/
+                }
 
-	print "</table>";
+                print "</table>";
+                print '<table class="border tableforfield centpercent">';
+                    // Nota privada
+                    print '<tr><td class="titlefield">'.$langs->trans("NotePrivate").'</td>';
+                    print '<td>'.$object->note_private.'</td>';
+                    print '</tr>';
+                    // Nota publica
+                    print '<tr><td class="titlefield">'.$langs->trans("NotePublic").'</td>';
+                    print '<td>'.$object->note_public.'</td>';
+                    print '</tr>';
+                print "</table>";
 
-	print '</div>';
-    print '</div>';
+            print '</div>';
+        print '</div>';
     print '</div>';
 
     print '<div class="clearboth"></div><br>';
