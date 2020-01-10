@@ -34,7 +34,6 @@
 
 //@ini_set('memory_limit', '128M');	// This may be useless if memory is hard limited by your PHP
 //require_once 'master.inc.php';
-require_once 'basic_lib/usuari.php';
 
 // For optional tuning. Enabled if environment variable MAIN_SHOW_TUNING_INFO is defined.
 $micro_start_time=0;
@@ -1639,7 +1638,9 @@ function top_menu($head, $title = '', $target = '', $disablejs = 0, $disablehead
 			$toprightmenu.=$result;	// For backward compatibility
 		}
                 // VASA mostrar numero tickets pendents
+                require_once 'basic_lib/usuari.php';
                 if($user->id > 1 && class_exists("Usuari")){
+                    
                     $usuariVASA = new Usuari($db);
 
                     $text ='<a href="'.DOL_URL_ROOT.'/ticket/list.php?mode=mine&search_fk_status=non_closed&idmenu=5&mainmenu=ticket&leftmenu=">';
