@@ -69,7 +69,12 @@ $refalreadyexists=0;
 
 $id=GETPOST('id', 'int');
 //VASA la ref = al id
-$ref=strtotime(date('Y-m-d H:i:s'));
+if(GETPOST('ref', 'alpha') == 1 ){
+    $ref=strtotime(date('Y-m-d H:i:s'));
+}else{
+    $ref=GETPOST('ref', 'alpha');
+}
+
 $type=GETPOST('type', 'int');
 $action=(GETPOST('action', 'alpha') ? GETPOST('action', 'alpha') : 'view');
 $cancel=GETPOST('cancel', 'alpha');

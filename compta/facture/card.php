@@ -3535,6 +3535,20 @@ if ($action == 'create')
 
 		print '</table>';
 	}
+        
+        // VASA mostrem intervencions relacionades i donem opcio a afegir-les
+	if (!empty($origin) && !empty($originid) && is_object($objectsrc)) {
+		print '<br>';
+
+		$title = $langs->trans('Intervencions Relacionades');
+		print load_fiche_titre($title);
+
+		print '<table class="noborder centpercent">';
+
+		$objectsrc->printOriginLinesList();
+
+		print '</table>';
+	}
 
         /*$i=0;
         foreach ($objectsrc->lines as $line) {

@@ -34,7 +34,7 @@
 
 //@ini_set('memory_limit', '128M');	// This may be useless if memory is hard limited by your PHP
 //require_once 'master.inc.php';
-//require_once DOL_DOCUMENT_ROOT.'/basic_lib/usuari.php';
+require_once 'basic_lib/usuari.php';
 
 // For optional tuning. Enabled if environment variable MAIN_SHOW_TUNING_INFO is defined.
 $micro_start_time=0;
@@ -1638,15 +1638,16 @@ function top_menu($head, $title = '', $target = '', $disablejs = 0, $disablehead
 		{
 			$toprightmenu.=$result;	// For backward compatibility
 		}
-                // VASA mostrar ti
-                $usuariVASA = new Usuari($db);
-                
-                $text ='<a href="'.DOL_URL_ROOT.'/ticket/list.php?mode=mine&search_fk_status=non_closed&idmenu=5&mainmenu=ticket&leftmenu=">';
-                //$text.= img_picto(":".$langs->trans("ModuleBuilder"), 'printer_top.png', 'class="printer"');
-                $text.='<span class="fa-stack"><span class="fa fa-circle-o fa-stack-2x"></span><strong class="fa-stack-1x">'.$usuariVASA->getNumTicketsPendentsLlegirById($user->id).'</strong></span> ';
-                $text.='</a>';
-		$toprightmenu.=@Form::textwithtooltip('', $langs->trans("Tickets Pendents"), 2, 1, $text, 'login_block_elem', 2);
-                
+                // VASA mostrar numero tickets pendents
+                if($user->id > 1 && class_exists("Usuari")){
+                    $usuariVASA = new Usuari($db);
+
+                    $text ='<a href="'.DOL_URL_ROOT.'/ticket/list.php?mode=mine&search_fk_status=non_closed&idmenu=5&mainmenu=ticket&leftmenu=">';
+                    //$text.= img_picto(":".$langs->trans("ModuleBuilder"), 'printer_top.png', 'class="printer"');
+                    $text.='<span class="fa-stack"><span class="fa fa-circle-o fa-stack-2x"></span><strong class="fa-stack-1x">'.$usuariVASA->getNumTicketsPendentsLlegirById($user->id).'</strong></span> ';
+                    $text.='</a>';
+                    $toprightmenu.=@Form::textwithtooltip('', $langs->trans("Tickets Pendents"), 2, 1, $text, 'login_block_elem', 2);
+                }
                 // Link to module builder
 		if (! empty($conf->modulebuilder->enabled))
 		{
