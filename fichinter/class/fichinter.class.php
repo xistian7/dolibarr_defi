@@ -30,7 +30,7 @@
 require_once DOL_DOCUMENT_ROOT .'/core/class/commonobject.class.php';
 require_once DOL_DOCUMENT_ROOT .'/core/class/commonobjectline.class.php';
 require_once DOL_DOCUMENT_ROOT.'/basic_lib/ticketvasa.php';
-
+require_once DOL_DOCUMENT_ROOT.'/basic_lib/intervencio.php';
 /**
  *	Class to manage interventions
  */
@@ -324,6 +324,10 @@ class Fichinter extends CommonObject
                                     $ticketvasa = new Ticketvasa($this->db);
                                     $ticketvasa->setStateByID($_POST['originid']);
                                 }
+                                //VASA comrovem que no hi hagui cap descompte a 0
+                                $intervencioClass = new Intervencio($this->db);
+                                $intervencioClass->setDescuentoMin0();
+                                
                                 
 				return $this->id;
 			}

@@ -53,7 +53,9 @@ require_once DOL_DOCUMENT_ROOT.'/core/class/extrafields.class.php';
 require_once DOL_DOCUMENT_ROOT.'/basic_lib/resolucio_incidencies.php';
 require_once DOL_DOCUMENT_ROOT.'/basic_lib/factura.php';
 require_once DOL_DOCUMENT_ROOT.'/basic_lib/productes.php';
+require_once DOL_DOCUMENT_ROOT.'/basic_lib/intervencio.php';
 $facturaLlibreria = new Factura($db);
+$intervencioClass = new Intervencio($db);
 if (!empty($conf->commande->enabled))
 	require_once DOL_DOCUMENT_ROOT.'/commande/class/commande.class.php';
 if (!empty($conf->projet->enabled)) {
@@ -465,9 +467,7 @@ if (empty($reshook))
 			require_once DOL_DOCUMENT_ROOT.'/core/class/discount.class.php';
 			$discount = new DiscountAbsolute($db);
 			$discount->fetch($_POST["remise_id_for_payment"]);
-
-			//var_dump($object->getRemainToPay(0));
-			//var_dump($discount->amount_ttc);exit;
+                        
 			if (price2num($discount->amount_ttc) > price2num($object->getRemainToPay(0)))
 			{
 				// TODO Split the discount in 2 automatically
@@ -909,6 +909,13 @@ if (empty($reshook))
 	{
 		if ($socid > 0) $object->socid = GETPOST('socid', 'int');
 
+                //VASA recuperem intervencions relacionades i les juntem en un array a la actual
+                $i=0;
+                foreach ($_POST['afegirIntervencio'] as $idRelacionat) {
+                    $IdIncidenciesAFacturar[$i] = $idRelacionat;
+                    $i++;
+                }
+                
 		$db->begin();
 
 		$error = 0;
@@ -916,7 +923,7 @@ if (empty($reshook))
 		// Fill array 'array_options' with data from add form
 		$ret = $extrafields->setOptionalsFromPost(null, $object);
 		if ($ret < 0) $error++;
-
+                
 		// Replacement invoice
 		if ($_POST['type'] == Facture::TYPE_REPLACEMENT)
 		{
@@ -1708,32 +1715,18 @@ if (empty($reshook))
 		{
 			$db->commit();
                         //VASA actulitzar extrafields un cop creada la factura ($id = idfactura)
-                        /*//VASA afegir preu a les linies de la comanda i treue totals
-                        $totalHT = 0;
-                        $totalTTC = 0;
-                        $totalTVA = 0;
-                        foreach ($objectsrc->lines as $line) {
-                            $produ = $facturaLlibreria->getProducteLiniaFactura($line->id);
-                            $line->desc = $produ['label'];
-                            $line->tva_tx = round($produ['tva_tx'],2);
-                            $line->subprice = round($produ['price'],2);
-                            $line->remise_percent = round($produ['descuento2'],2);
-                            $line->qty = round($produ['cantidad2'],2);
-
-                            $totalHT = $totalHT + ($line->subprice * $line->qty * ((100-$line->remise_percent)/100));
-
-
-                            echo '<br/>';
-                        }
-                        if($line->tva_tx >0){
-                            $totalTVA = $totalTVA +($totalHT * $line->tva_tx / 100);
-                        }
-                        $totalTTC = $totalTTC + $totalHT + $totalTVA;
-                        $objectsrc->total_ht = $totalHT;
-                        $objectsrc->total_ttc = $totalTTC;
-                        $objectsrc->total_tva = $totalTVA;*/
                         $resolucioIncidencies = new ResolucioInicidencies($db);
                         $resolucioIncidencies->actualitzarLiniaFacturaEnIncidencia($id);
+                        
+                        //VASA si hi ha una intervenció relacionada tractar
+                        if(count($IdIncidenciesAFacturar)>0){
+                            foreach ($IdIncidenciesAFacturar as $idIntervencioRelacionat){
+                                $intervencioClass->addIntervencioToFactura($idIntervencioRelacionat,$id);
+                                $intervencioClass->setStateByID($idIntervencioRelacionat);
+                            } 
+                        }
+                        
+                        
                         
 			// Define output language
 			if (empty($conf->global->MAIN_DISABLE_PDF_AUTOUPDATE) && count($object->lines))
@@ -3515,7 +3508,7 @@ if ($action == 'create')
 	print '<input type="button" class="button" value="'.$langs->trans("Cancel").'" onClick="javascript:history.go(-1)">';
 	print '</div>';
 
-	print "</form>\n";
+	//print "</form>\n";
         print '</div>';
         print '<div class="col-md-6">';
         
@@ -3540,14 +3533,55 @@ if ($action == 'create')
 	if (!empty($origin) && !empty($originid) && is_object($objectsrc)) {
 		print '<br>';
 
-		$title = $langs->trans('Intervencions Relacionades');
+                $title = $langs->trans('Intervencions Relacionades');
 		print load_fiche_titre($title);
-
+                
 		print '<table class="noborder centpercent">';
+                    print '<tr class="liste_titre">';
+                        print '<td>'.$langs->trans('REF').'</td>';
+                        print '<td>'.$langs->trans('Data Finalitzacio').'</td>';
+                        print '<td> </td>';
+                        //print '<td class="center">'.$form->showCheckAddButtons('checkforselect', 1).'</td>';
+                    print '</tr>';
+                    if($intervencioClass->getIntervencionsClientFinalitzades($objectsrc->socid) != NULL){
+                        foreach ($intervencioClass->getIntervencionsClientFinalitzades($objectsrc->socid) as $intervencio) {
+                            if($intervencio['rowid'] != $objectsrc->id){
+                                print '<tr class="oddeven">';
+                                print '<td><div style="color:blue; cursor: pointer;" class="open-intervencioModal" data-id="'.$intervencio['rowid'].'">'.$intervencio['ref'].'</a></td>';
+                                print '<td>'.$intervencio['date_valid'].'</td>';
+                                print '<td class="center"><input type="checkbox" name="afegirIntervencio['.$intervencio['rowid'].']" id="intervencioid_'.$intervencio['rowid'].'" value="'.$intervencio['rowid'].'"></td>';
+                                //print '<td class="center">'.$form->showCheckAddButtons('checkforselect', 1).'</td>';
+                            print '</tr>';
+                            }
+                        }
+                    }
+                    
 
-		$objectsrc->printOriginLinesList();
+		print '</table>';?>
+                            <!-- The Modal -->
+                            <div class="modal" id="myModal1">
+                              <div class="modal-dialog modal-xl">
+                                <div class="modal-content">
 
-		print '</table>';
+                                  <!-- Modal Header -->
+                                  <div class="modal-header">
+                                    <h4 class="modal-title">Intervenció</h4>
+                                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                  </div>
+
+                                  <!-- Modal body -->
+                                  <div class="modal-body">
+                                      
+                                  </div>
+
+                                  <!-- Modal footer -->
+                                  <div class="modal-footer">
+                                  </div>
+
+                                </div>
+                              </div>
+                            </div>
+                        <?php
 	}
 
         /*$i=0;
@@ -3556,7 +3590,7 @@ if ($action == 'create')
             $line->desc = $lineasAux[$i]->desc;
             echo '<br/>';
         }*/
-        
+        print "</form>\n";
         print '</div>';
 	print '<br>';
 }

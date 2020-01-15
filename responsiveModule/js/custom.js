@@ -21,5 +21,28 @@ $(document).ready(function(){
             }
         });
     });
+    
+    $(document).on("click", ".open-intervencioModal", function () {
+        var intervencioID = $(this).data('id');
+        var userid = $(this).data('id');
+
+        // AJAX request
+        $.ajax({
+         url: '../../basic_lib/view/intervencio.php',
+         type: 'post',
+         data: {intervencioid: intervencioID},
+         success: function(response){ 
+           // Add response in Modal body
+           $('.modal-body').html(response);
+
+           // Display Modal
+           $('#myModal1').modal('show'); 
+         }
+       });
+        /*$(".modal-title").val( "hola" );
+        // As pointed out in comments, 
+        // it is unnecessary to have to manually call the modal.
+        $('#myModal1').modal('show');*/
+   });
 });
 
