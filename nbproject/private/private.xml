@@ -3,18 +3,17 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
+            <file>file:/C:/xampp/htdocs/dolibarr_defi/basic_lib/factura.php</file>
+            <file>file:/C:/xampp/htdocs/dolibarr_defi/core/modules/modECM.class.php</file>
+            <file>file:/C:/xampp/htdocs/dolibarr_defi/baseFunction/core/modules/modBaseFunction.class.php</file>
             <file>file:/C:/xampp/htdocs/dolibarr_defi/main.inc.php</file>
-            <file>file:/C:/xampp/htdocs/dolibarr_defi/basic_lib/pedido_proveedor.php</file>
-            <file>file:/C:/xampp/htdocs/dolibarr_defi/product/card.php</file>
-            <file>file:/C:/xampp/htdocs/dolibarr_defi/responsiveModule/js/custom.js</file>
+            <file>file:/C:/xampp/htdocs/dolibarr_defi/includes/DebugBar/JavascriptRenderer.php</file>
             <file>file:/C:/xampp/htdocs/dolibarr_defi/compta/facture/card.php</file>
-            <file>file:/C:/xampp/htdocs/dolibarr_defi/responsiveModule/core/modules/modResponsiveModule.class.php</file>
-            <file>file:/C:/xampp/htdocs/dolibarr_defi/ticket/card.php</file>
-            <file>file:/C:/xampp/htdocs/dolibarr_defi/responsiveModule/css/body.css</file>
-            <file>file:/C:/xampp/htdocs/dolibarr_defi/fourn/commande/dispatch.php</file>
-            <file>file:/C:/xampp/htdocs/dolibarr_defi/product/class/product.class.php</file>
-            <file>file:/C:/xampp/htdocs/dolibarr_defi/fourn/commande/card.php</file>
-            <file>file:/C:/xampp/htdocs/dolibarr_defi/core/tpl/objectline_create.tpl.php</file>
+            <file>file:/C:/xampp/htdocs/dolibarr_defi/basic_lib/servei.php</file>
+            <file>file:/C:/xampp/htdocs/dolibarr_defi/contrat/services_list.php</file>
+            <file>file:/C:/xampp/htdocs/dolibarr_defi/core/menus/standard/eldy.lib.php</file>
+            <file>file:/C:/xampp/htdocs/dolibarr_defi/fichinter/card.php</file>
+            <file>file:/C:/xampp/htdocs/dolibarr_defi/admin/basefunction_setuppage.php</file>
         </group>
     </open-files>
 </project-private>

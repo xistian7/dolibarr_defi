@@ -31,6 +31,10 @@ require "../main.inc.php";
 require_once DOL_DOCUMENT_ROOT."/contrat/class/contrat.class.php";
 require_once DOL_DOCUMENT_ROOT."/product/class/product.class.php";
 require_once DOL_DOCUMENT_ROOT."/societe/class/societe.class.php";
+require_once DOL_DOCUMENT_ROOT.'/baseFunction/core/modules/modBaseFunction.class.php';
+require_once DOL_DOCUMENT_ROOT.'/basic_lib/servei.php';
+$serveiClass = new Servei($db);
+$ESTAT_CONTRACTES_DEFI = (modBaseFunction::getEstatConfigContractesDefi($db) == 1 ? true : false);
 
 // Load translation files required by the page
 $langs->loadLangs(array('products', 'contracts', 'companies'));
@@ -128,6 +132,7 @@ $arrayfields=array(
 	'cd.date_fin_validite'=>array('label'=>$langs->trans("DateEndPlannedShort"), 'checked'=>(($mode == "" || $mode == -1) || $mode < 5)),
 	'cd.date_cloture'=>array('label'=>$langs->trans("DateEndRealShort"), 'checked'=>(($mode == "" || $mode == -1) || $mode >= 5)),
 	'status'=>array('label'=>$langs->trans("Status"), 'checked'=>1),
+        'facturat'=>array('label'=>$langs->trans("Facturat"), 'checked'=>1),
 	//'cd.datec'=>array('label'=>$langs->trans("DateCreation"), 'checked'=>0, 'position'=>500),
 	'cd.tms'=>array('label'=>$langs->trans("DateModificationShort"), 'checked'=>0, 'position'=>500)
 );
@@ -397,6 +402,9 @@ if (! empty($arrayfields['cd.datec']['checked']))  print_liste_field_titre($arra
 if (! empty($arrayfields['cd.tms']['checked']))    print_liste_field_titre($arrayfields['cd.tms']['label'], $_SERVER["PHP_SELF"], "cd.tms", "", $param, '', $sortfield, $sortorder, 'center nowrap ');
 if (! empty($arrayfields['status']['checked'])) print_liste_field_titre($arrayfields['status']['label'], $_SERVER["PHP_SELF"], "cd.statut,c.statut", "", $param, '', $sortfield, $sortorder, 'right ');
 print_liste_field_titre($selectedfields, $_SERVER["PHP_SELF"], "", '', '', '', $sortfield, $sortorder, 'center maxwidthsearch ');
+
+//VASA afegim un boto al llistat en l¡ofció de facturar el servei
+if($ESTAT_CONTRACTES_DEFI){ print_liste_field_titre($arrayfields['facturat']['label'], $_SERVER["PHP_SELF"], "", "", $param, '', $sortfield, FALSE, 'center ');}
 print "</tr>\n";
 
 print '<tr class="liste_titre">';
@@ -527,6 +535,11 @@ if (! empty($arrayfields['status']['checked']))
 print '<td class="liste_titre maxwidthsearch">';
 $searchpicto=$form->showFilterAndCheckAddButtons(0);
 print $searchpicto;
+//VASA afegim un boto al llistat en l¡ofció de facturar el servei
+if($ESTAT_CONTRACTES_DEFI){ 
+    print '<td class="liste_titre">';
+    print '</td>';
+}
 print '</td>';
 print "</tr>\n";
 
@@ -719,6 +732,19 @@ while ($i < min($num, $limit))
 		if (in_array($obj->rowid, $arrayofselected)) $selected=1;
 		print '<input id="cb'.$obj->rowid.'" class="flat checkforselect" type="checkbox" name="toselect[]" value="'.$obj->rowid.'"'.($selected?' checked="checked"':'').'>';
 	}
+        //VASA afegim un boto al llistat en l¡ofció de facturar el servei
+        if($ESTAT_CONTRACTES_DEFI){ 
+            print '<td class="center">';
+                if($obj->statut == 4 && $obj->date_cloture == NULL){
+                    if(!$serveiClass->pendentDeFacturarLinea($obj->statut)){
+                        print '<button type="button" class="btn btn-outline-success disabled">Facturat</button>';
+                    }else{
+                        print '<button type="button" class="btn btn-outline-danger">Pendent</button>';
+                    }
+                    
+                }
+            print '</td>';
+        }
 	print '</td>';
 	if (! $i) $totalarray['nbfield']++;
 

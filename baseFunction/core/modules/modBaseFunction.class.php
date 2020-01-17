@@ -468,4 +468,20 @@ class modBaseFunction extends DolibarrModules
         return $resql;
     }
     
+    /*consultar l'estat de la configuracio referent als menus de defi*/
+    public static function getEstatConfigMenuDefi($db){
+        $sql = 'SELECT estat FROM `llx_defi_basefunction_config` WHERE rowid = 2';
+        $resql = $db->query($sql);
+        $idproj = $resql->fetch_assoc()["estat"];
+        return $idproj;
+    }
+    
+    /*consultar l'estat de la configuracio referent als menus de defi*/
+    public static function getEstatConfigContractesDefi($db){
+        $sql = 'SELECT estat FROM `llx_defi_basefunction_config` WHERE rowid = 1';
+        $resql = $db->query($sql);
+        $idproj = $resql->fetch_assoc()["estat"];
+        return $idproj;
+    }
+    
 }

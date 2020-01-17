@@ -27,6 +27,7 @@
  *  \brief		Library for file eldy menus
  */
 require_once DOL_DOCUMENT_ROOT.'/core/class/menubase.class.php';
+require_once DOL_DOCUMENT_ROOT.'/baseFunction/core/modules/modBaseFunction.class.php';
 
 
 /**
@@ -45,7 +46,8 @@ function print_eldy_menu($db, $atarget, $type_user, &$tabMenu, &$menu, $noout = 
 {
 	global $user, $conf, $langs, $mysoc;
 	global $dolibarr_main_db_name;
-
+        $AMAGAR_PUNTS_MENU_DEFI = (modBaseFunction::getEstatConfigMenuDefi($db) == 1 ? true : false);
+        
 	$mainmenu = (empty($_SESSION["mainmenu"]) ? '' : $_SESSION["mainmenu"]);
 	$leftmenu = (empty($_SESSION["leftmenu"]) ? '' : $_SESSION["leftmenu"]);
 
@@ -89,29 +91,32 @@ function print_eldy_menu($db, $atarget, $type_user, &$tabMenu, &$menu, $noout = 
 	);*/
 
 	// Members
-	$tmpentry = array(
-	    'enabled' => (!empty($conf->adherent->enabled)),
-	    'perms' => (!empty($user->rights->adherent->lire)),
-	    'module' => 'adherent'
-	);
-	$menu_arr[] = array(
-		'name' => 'Members',
-		'link' => '/adherents/index.php?mainmenu=members&amp;leftmenu=',
-		'title' => "MenuMembers",
-		'level' => 0,
-		'enabled' => $showmode = isVisibleToUserType($type_user, $tmpentry, $listofmodulesforexternal),
-		'target' => $atarget,
-		'mainmenu' => "members",
-		'leftmenu' => '',
-		'position' => 18,
-		'id' => $id,
-		'idsel' => 'members',
-		'classname' =>  $classname = ($_SESSION["mainmenu"] && $_SESSION["mainmenu"] == "members") ? 'class="tmenusel"' : 'class="tmenu"',
-		'prefix' => '',
-		'session' => (($_SESSION["mainmenu"] && $_SESSION["mainmenu"] == "members") ? 0 : 1),
-		'loadLangs' => array(),
-		'submenus' => array(),
-	);
+        //VASA amagar menu per DEFI ja que no el fem servir
+        if(!$AMAGAR_PUNTS_MENU_DEFI){
+            $tmpentry = array(
+                'enabled' => (!empty($conf->adherent->enabled)),
+                'perms' => (!empty($user->rights->adherent->lire)),
+                'module' => 'adherent'
+            );
+            $menu_arr[] = array(
+                    'name' => 'Members',
+                    'link' => '/adherents/index.php?mainmenu=members&amp;leftmenu=',
+                    'title' => "MenuMembers",
+                    'level' => 0,
+                    'enabled' => $showmode = isVisibleToUserType($type_user, $tmpentry, $listofmodulesforexternal),
+                    'target' => $atarget,
+                    'mainmenu' => "members",
+                    'leftmenu' => '',
+                    'position' => 18,
+                    'id' => $id,
+                    'idsel' => 'members',
+                    'classname' =>  $classname = ($_SESSION["mainmenu"] && $_SESSION["mainmenu"] == "members") ? 'class="tmenusel"' : 'class="tmenu"',
+                    'prefix' => '',
+                    'session' => (($_SESSION["mainmenu"] && $_SESSION["mainmenu"] == "members") ? 0 : 1),
+                    'loadLangs' => array(),
+                    'submenus' => array(),
+            );
+        }
 
 	// Third parties
 	$tmpentry = array(
@@ -193,33 +198,35 @@ function print_eldy_menu($db, $atarget, $type_user, &$tabMenu, &$menu, $noout = 
 	    'loadLangs' => array("mrp"),
 	    'submenus' => array(),
 	);
-
-	// Projects
-	$tmpentry = array(
-	    'enabled'=> (!empty($conf->projet->enabled) ? 1 : 0),
-	    'perms'=> (!empty($user->rights->projet->lire) ? 1 : 0),
-	    'module'=>'projet'
-	);
-	$menu_arr[] = array(
-		'name' => 'Projet',
-		'link' => '/projet/index.php?mainmenu=project&amp;leftmenu=',
-		'title' => (empty($conf->global->PROJECT_USE_OPPORTUNITIES) || $conf->global->PROJECT_USE_OPPORTUNITIES == 2)
-					? (($conf->global->PROJECT_USE_OPPORTUNITIES == 2) ? "Leads" : "Projects")
-					: "Projects",
-		'level' => 0,
-	    'enabled' => $showmode = isVisibleToUserType($type_user, $tmpentry, $listofmodulesforexternal),
-		'target' => $atarget,
-		'mainmenu' => "project",
-		'leftmenu' => '',
-		'position' => 35,
-		'id' => $id,
-		'idsel' => 'project',
-		'classname' =>  $classname = ($_SESSION["mainmenu"] && $_SESSION["mainmenu"] == "project") ? 'class="tmenusel"' : 'class="tmenu"',
-		'prefix' => '',
-		'session' => (($_SESSION["mainmenu"] && $_SESSION["mainmenu"] == "project") ? 0 : 1),
-		'loadLangs' => array("projects"),
-		'submenus' => array(),
-	);
+        //VASA amagar menu per DEFI ja que no el fem servir
+        if(!$AMAGAR_PUNTS_MENU_DEFI){
+            // Projects
+            $tmpentry = array(
+                'enabled'=> (!empty($conf->projet->enabled) ? 1 : 0),
+                'perms'=> (!empty($user->rights->projet->lire) ? 1 : 0),
+                'module'=>'projet'
+            );
+            $menu_arr[] = array(
+                    'name' => 'Projet',
+                    'link' => '/projet/index.php?mainmenu=project&amp;leftmenu=',
+                    'title' => (empty($conf->global->PROJECT_USE_OPPORTUNITIES) || $conf->global->PROJECT_USE_OPPORTUNITIES == 2)
+                                            ? (($conf->global->PROJECT_USE_OPPORTUNITIES == 2) ? "Leads" : "Projects")
+                                            : "Projects",
+                    'level' => 0,
+                'enabled' => $showmode = isVisibleToUserType($type_user, $tmpentry, $listofmodulesforexternal),
+                    'target' => $atarget,
+                    'mainmenu' => "project",
+                    'leftmenu' => '',
+                    'position' => 35,
+                    'id' => $id,
+                    'idsel' => 'project',
+                    'classname' =>  $classname = ($_SESSION["mainmenu"] && $_SESSION["mainmenu"] == "project") ? 'class="tmenusel"' : 'class="tmenu"',
+                    'prefix' => '',
+                    'session' => (($_SESSION["mainmenu"] && $_SESSION["mainmenu"] == "project") ? 0 : 1),
+                    'loadLangs' => array("projects"),
+                    'submenus' => array(),
+            );
+        }
 
 	// Commercial
 	$tmpentry = array(
@@ -371,34 +378,36 @@ function print_eldy_menu($db, $atarget, $type_user, &$tabMenu, &$menu, $noout = 
 		'loadLangs' => array("holiday"),
 		'submenus' => array(),
 	);
+        //VASA amagar menu per DEFI ja que no el fem servir
+        if(!$AMAGAR_PUNTS_MENU_DEFI){
+            // Tools
+            $tmpentry = array(
+                'enabled'=>1,
+                'perms'=>1,
+                'module'=>''
+            );
+	
+            $menu_arr[] = array(
+                    'name' => 'Tools',
+                    'link' => '/core/tools.php?mainmenu=tools&amp;leftmenu=',
+                    'title' =>  "Tools",
+                    'level' => 0,
+                'enabled' => $showmode = isVisibleToUserType($type_user, $tmpentry, $listofmodulesforexternal),
+                    'target' => $atarget,
+                    'mainmenu' => "tools",
+                    'leftmenu' => '',
+                    'position' => 90,
+                    'id' => $id,
+                    'idsel' => 'tools',
+                    'classname' =>  $classname = ($_SESSION["mainmenu"] && $_SESSION["mainmenu"] == "tools") ? 'class="tmenusel"' : 'class="tmenu"',
+                    'prefix' => '',
 
-	// Tools
-	$tmpentry = array(
-	    'enabled'=>1,
-	    'perms'=>1,
-	    'module'=>''
-	);
-	$menu_arr[] = array(
-		'name' => 'Tools',
-		'link' => '/core/tools.php?mainmenu=tools&amp;leftmenu=',
-		'title' =>  "Tools",
-		'level' => 0,
-	    'enabled' => $showmode = isVisibleToUserType($type_user, $tmpentry, $listofmodulesforexternal),
-		'target' => $atarget,
-		'mainmenu' => "tools",
-		'leftmenu' => '',
-		'position' => 90,
-		'id' => $id,
-		'idsel' => 'tools',
-		'classname' =>  $classname = ($_SESSION["mainmenu"] && $_SESSION["mainmenu"] == "tools") ? 'class="tmenusel"' : 'class="tmenu"',
-		'prefix' => '',
+                    'session' => (($_SESSION["mainmenu"] && $_SESSION["mainmenu"] == "tools") ? 0 : 1),
 
-		'session' => (($_SESSION["mainmenu"] && $_SESSION["mainmenu"] == "tools") ? 0 : 1),
-
-		'loadLangs' => array("other"),
-		'submenus' => array(),
-	);
-
+                    'loadLangs' => array("other"),
+                    'submenus' => array(),
+            );
+        }
 	// Add menus
 	foreach ($menu_arr as $key => $smenu)
 	{

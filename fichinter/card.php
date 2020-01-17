@@ -1743,7 +1743,7 @@ elseif ($id > 0 || !empty($ref))
 				}
                                 if ($object->statut == Fichinter::STATUS_CLOSED)
 				{
-					print '<div class="inline-block divButAction"><a class="butAction" href="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&amp;action=reopenintervencio">'.$langs->trans("ReopenInterbencio").'</a></div>';
+					print '<div class="inline-block divButAction"><a class="butAction" href="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&amp;action=reopenintervencio">'.$langs->trans("Modify").'</a></div>';
 				}
                                 //VASA de moment no clonem
 				// Clone
