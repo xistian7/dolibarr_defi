@@ -44,5 +44,23 @@ $(document).ready(function(){
         // it is unnecessary to have to manually call the modal.
         $('#myModal1').modal('show');*/
    });
+    $(document).on("click", ".btn-outline-danger", function (e) {
+        e.preventDefault();
+        var lineacontracte = $(this).data('lineacontracte');
+        if(lineacontracte > 0){
+            var opcion = confirm("Estas segur que vols facturar aques servei?");
+            if (opcion == true) {
+                $.ajax({
+                    url: '../../basic_lib/view/servei.php',
+                    type: 'post',
+                    data: {lineacontracte: lineacontracte},
+                    success: function(){ 
+                        // Display Modal
+                        location.reload();
+                    }
+                });
+            }
+        }
+    });
 });
 

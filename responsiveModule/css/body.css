@@ -51,6 +51,13 @@ table.dataTable thead .sorting_desc_disabled:before {
     margin-right: 20px;
     font-weight: 700;
 }
+a.btn-outline-danger{
+    color:#dc3545 !important;
+}
+a.btn-outline-danger:hover{
+    color:white !important;
+}
+
 @media screen and (min-width:1024px) {
     .col-md-1{
         width:8% !important;

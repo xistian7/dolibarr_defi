@@ -67,6 +67,7 @@ class Intervencio
     
     /*VASA recuperar quantitat d'una línea*/
     public function getCantidadLinia($idLinia){
+        
         $sql = 'SELECT cantidad2 FROM `llx_fichinterdet_extrafields` WHERE fk_object = '.$idLinia;
         $resql = $this->db->query($sql);
         $idproj = $resql->fetch_assoc()["cantidad2"];
@@ -117,6 +118,20 @@ class Intervencio
             $i++;
         }
         return $configuracions;
+    }
+    /*VASA recuperar descopte d'una línea*/
+    public function getNextReferencia(){
+        $sql = 'SELECT ref FROM `llx_fichinter` ORDER BY rowid DESC LIMIT 1';
+        $resql = $this->db->query($sql);
+        $ref = $resql->fetch_assoc()["ref"];
+        $nextRef = "FI";
+        if(substr($ref, 2,-5) == date('y').''.date('m')){
+            $nextRef =  $nextRef.date('y').''.date('m')."-".substr($ref, 5)+1;
+        }else{
+            $nextRef = $nextRef.date('y').''.date('m')."-0001";
+        }
+        var_dump(); 
+        return $nextRef;
     }
 }
 ?>

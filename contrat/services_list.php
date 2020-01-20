@@ -127,10 +127,10 @@ $arrayfields=array(
 	'cd.tva_tx'=>array('label'=>$langs->trans("VAT"), 'checked'=>0, 'position'=>100),
 	'cd.subprice'=>array('label'=>$langs->trans("PriceUHT"), 'checked'=>0, 'position'=>100),
 	's.nom'=>array('label'=>$langs->trans("ThirdParty"), 'checked'=>1, 'position'=>100),
-	'cd.date_ouverture_prevue'=>array('label'=>$langs->trans("DateStartPlannedShort"), 'checked'=>(($mode == "" || $mode == -1) || $mode == "0")),
+	//'cd.date_ouverture_prevue'=>array('label'=>$langs->trans("DateStartPlannedShort"), 'checked'=>(($mode == "" || $mode == -1) || $mode == "0")),
 	'cd.date_ouverture'=>array('label'=>$langs->trans("DateStartRealShort"), 'checked'=>(($mode == "" || $mode == -1) || $mode > 0)),
 	'cd.date_fin_validite'=>array('label'=>$langs->trans("DateEndPlannedShort"), 'checked'=>(($mode == "" || $mode == -1) || $mode < 5)),
-	'cd.date_cloture'=>array('label'=>$langs->trans("DateEndRealShort"), 'checked'=>(($mode == "" || $mode == -1) || $mode >= 5)),
+	//'cd.date_cloture'=>array('label'=>$langs->trans("DateEndRealShort"), 'checked'=>(($mode == "" || $mode == -1) || $mode >= 5)),
 	'status'=>array('label'=>$langs->trans("Status"), 'checked'=>1),
         'facturat'=>array('label'=>$langs->trans("Facturat"), 'checked'=>1),
 	//'cd.datec'=>array('label'=>$langs->trans("DateCreation"), 'checked'=>0, 'position'=>500),
@@ -736,10 +736,10 @@ while ($i < min($num, $limit))
         if($ESTAT_CONTRACTES_DEFI){ 
             print '<td class="center">';
                 if($obj->statut == 4 && $obj->date_cloture == NULL){
-                    if(!$serveiClass->pendentDeFacturarLinea($obj->statut)){
+                    if(!$serveiClass->pendentDeFacturarLinea($obj->rowid)){
                         print '<button type="button" class="btn btn-outline-success disabled">Facturat</button>';
                     }else{
-                        print '<button type="button" class="btn btn-outline-danger">Pendent</button>';
+                        print '<button type="button" data-lineacontracte="'.$obj->rowid.'" class="btn btn-outline-danger">Pendent</button>';
                     }
                     
                 }
