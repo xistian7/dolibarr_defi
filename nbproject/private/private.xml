@@ -3,17 +3,17 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
+            <file>file:/C:/xampp/htdocs/dolibarr_defi/core/modules/modFacture.class.php</file>
+            <file>file:/C:/xampp/htdocs/dolibarr_defi/compta/facture/class/facture.class.php</file>
             <file>file:/C:/xampp/htdocs/dolibarr_defi/basic_lib/factura.php</file>
-            <file>file:/C:/xampp/htdocs/dolibarr_defi/core/modules/modECM.class.php</file>
-            <file>file:/C:/xampp/htdocs/dolibarr_defi/baseFunction/core/modules/modBaseFunction.class.php</file>
-            <file>file:/C:/xampp/htdocs/dolibarr_defi/main.inc.php</file>
-            <file>file:/C:/xampp/htdocs/dolibarr_defi/includes/DebugBar/JavascriptRenderer.php</file>
+            <file>file:/C:/xampp/htdocs/dolibarr_defi/basic_lib/view/servei.php</file>
+            <file>file:/C:/xampp/htdocs/dolibarr_defi/basic_lib/intervencio.php</file>
+            <file>file:/C:/xampp/htdocs/dolibarr_defi/core/modules/facture/doc/pdf_defi_complet.modules.php</file>
             <file>file:/C:/xampp/htdocs/dolibarr_defi/compta/facture/card.php</file>
             <file>file:/C:/xampp/htdocs/dolibarr_defi/basic_lib/servei.php</file>
             <file>file:/C:/xampp/htdocs/dolibarr_defi/contrat/services_list.php</file>
             <file>file:/C:/xampp/htdocs/dolibarr_defi/core/menus/standard/eldy.lib.php</file>
-            <file>file:/C:/xampp/htdocs/dolibarr_defi/fichinter/card.php</file>
-            <file>file:/C:/xampp/htdocs/dolibarr_defi/admin/basefunction_setuppage.php</file>
+            <file>file:/C:/xampp/htdocs/dolibarr_defi/core/class/html.formfile.class.php</file>
         </group>
     </open-files>
 </project-private>

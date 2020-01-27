@@ -81,6 +81,12 @@ $opclotureday=GETPOST('opclotureday', 'int');
 $opclotureyear=GETPOST('opclotureyear', 'int');
 $filter_opcloture=GETPOST('filter_opcloture', 'alpha');
 
+//VASA faacturar tot lo pendent
+if(isset($_GET['action'])){
+    if($_GET['action'] == "facturartot"){
+        $serveiClass->facturarTotsServeisPendents();
+    }
+}
 
 // Initialize technical object to manage hooks of page. Note that conf->hooks_modules contains array of hook context
 $object = new ContratLigne($db);
@@ -537,7 +543,8 @@ $searchpicto=$form->showFilterAndCheckAddButtons(0);
 print $searchpicto;
 //VASA afegim un boto al llistat en l¡ofció de facturar el servei
 if($ESTAT_CONTRACTES_DEFI){ 
-    print '<td class="liste_titre">';
+    print '<td class="liste_titre" style="text-align:center; ">';
+        print '<a href="/contrat/services_list.php?leftmenu=contracts&action=facturartot" type="button" data-lineacontracte="" class="btn btn-outline-primary" onclick="return confirm(\'Estas segur que vols facturar tots els contractes pendents?\')">Facturar Tot</a>';
     print '</td>';
 }
 print '</td>';

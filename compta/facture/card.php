@@ -3926,6 +3926,23 @@ elseif ($id > 0 || !empty($ref))
 		// Ask confirmatio to clone
 		$formconfirm = $form->formconfirm($_SERVER["PHP_SELF"].'?facid='.$object->id, $langs->trans('ToClone'), $langs->trans('ConfirmCloneInvoice', $object->ref), 'confirm_clone', $formquestion, 'yes', 1, 250);
 	}
+        
+        // Confirmation de la suppression d'une ligne produit
+	if ($action == 'ask_deleteline') {
+		$formconfirm = $form->formconfirm($_SERVER["PHP_SELF"].'?facid='.$object->id.'&lineid='.$lineid, $langs->trans('DeleteProductLine'), $langs->trans('ConfirmDeleteProductLine'), 'confirm_deleteline', '', 'no', 1);
+	}
+        
+        // Eliminar la factura
+	if ($action == 'remove_file') {
+		$facturaLlibreria->deleteFileFactura($_GET['file']);
+	}
+        
+        // Crear nova factura
+	if ($action == 'create_file_factura') {
+            if($_GET['plantilla']!=NULL){
+                $facturaLlibreria->createFileFactura($_GET['facid'],$_GET['plantilla']);
+            }
+	}
 
 	// Call Hook formConfirm
 	$parameters = array('lineid' => $lineid);
@@ -5287,7 +5304,12 @@ elseif ($id > 0 || !empty($ref))
 		$urlsource = $_SERVER['PHP_SELF'].'?facid='.$object->id;
 		$genallowed = $usercanread;
 		$delallowed = $usercancreate;
-
+                
+                //VASA comprovar que existex l'arxiu
+                if($object->last_main_doc == NULL || $object->last_main_doc == ""){
+                    $filedir = "";
+                    $filename = "";
+                }
 		print $formfile->showdocuments('facture', $filename, $filedir, $urlsource, $genallowed, $delallowed, $object->modelpdf, 1, 0, 0, 28, 0, '', '', '', $soc->default_lang, '', $object);
 		$somethingshown = $formfile->numoffiles;
 

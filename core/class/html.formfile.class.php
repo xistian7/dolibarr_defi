@@ -749,10 +749,22 @@ class FormFile
 			}
 
 			// Button
-			$genbutton = '<input class="button buttongen" id="'.$forname.'_generatebutton" name="'.$forname.'_generatebutton"';
+                        //VASA crear boto generar perque funcioni
+                        $genbutton = '<a onclick="addURL(this)" class="btn btn-secondary" id="botoCreateFile" href="'.DOL_URL_ROOT.'/compta/facture/card.php?facid='.$object->id.'&amp;action=create_file_factura">'.$langs->trans('Create').'</a>';
+                        print '<script type="text/javascript" language="javascript">
+                                    $(document).on("click", "#botoCreateFile", function (e) {
+                                        e.preventDefault();
+                                        var nomplantilla = $("#select2-model-container").text();
+                                        var theHref = $(this).attr("href");
+                                        $(this).attr("href", theHref + "&plantilla="+nomplantilla);
+                                        $(this).attr("id","");
+                                        this.click();
+                                    });
+                                </script>';
+			/*$genbutton = '<input class="button buttongen" id="'.$forname.'_generatebutton" name="'.$forname.'_generatebutton"';
 			$genbutton.= ' type="submit" value="'.$buttonlabel.'"';
 			if (! $allowgenifempty && ! is_array($modellist) && empty($modellist)) $genbutton.= ' disabled';
-			$genbutton.= '>';
+			$genbutton.= '>';*/
 			if ($allowgenifempty && ! is_array($modellist) && empty($modellist) && empty($conf->dol_no_mouse_hover) && $modulepart != 'unpaid')
 			{
 			   	$langs->load("errors");

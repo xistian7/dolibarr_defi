@@ -67,6 +67,17 @@ class Servei
         return $estaPendent;
     }
     
+    public function  facturarTotsServeisPendents(){
+        $sql = 'SELECT rowid FROM `llx_contratdet`';
+        $resql = $this->db->query($sql);
+        while($rowid = $resql->fetch_array()['rowid']){
+            //ESTA ES LA LINEA 45
+            if($this->pendentDeFacturarLinea($rowid) == TRUE){
+                $this->crearIntervencióLineaServei($rowid);
+            }
+	}
+    }
+    
     /*VASA et diu si s0ha facturar el proxi periode de temps*/
     public function crearIntervencióLineaServei($idLineaContracte, $dataFacturat = NULL){
         if($dataFacturat == null){ $dataFacturat = date('Y-m-d'); }
@@ -177,7 +188,6 @@ class Servei
             . ')';
         $resql4 = $this->db->query($sql4);
         
-        
         $this->actulitzarFetxaFacturatContracte($idLineaContracte);
        
 
@@ -194,18 +204,20 @@ class Servei
     }
     
     /*VASA ACTUALITZAR DATA FACTURACIÓ*/
-    public function actulitzarFetxaFacturatContracte($idLineaContracte){
+    public function actulitzarFetxaFacturatContracte($idLineaContracte,$dataFacturat = NULL){
         $sql = 'SELECT data_ultima_facturacio FROM `llx_contratdet_extrafields` WHERE fk_object = '.$idLineaContracte;
         $resql = $this->db->query($sql);
         $datU = $resql->fetch_assoc()["data_ultima_facturacio"];
+        if($dataFacturat == null){ $dataFacturat = date('Y-m-d H:i:s'); }
         if($datU != NULL){
              //ACTUALITZAR DATA FACTURACIÓ
-            $sql5 = 'UPDATE llx_contratdet_extrafields SET data_ultima_facturacio = '.$dataFacturat.' WHERE fk_object = '.$idLineaContracte.';';
+            $sql5 = 'UPDATE llx_contratdet_extrafields SET data_ultima_facturacio = "'.$dataFacturat.'" WHERE fk_object = '.$idLineaContracte.';';
             
         }else{
             //CREAR DATA FACTURACIÓ
             $sql5 = 'INSERT INTO `llx_contratdet_extrafields`(`tms`, `fk_object`, `import_key`, `data_ultima_facturacio`) VALUES ("'.date('Y-m-d H:i:s').'",'.$idLineaContracte.',NULL,"'.date('Y-m-d').'")';
         }
+        //var_dump($sql5); die();
         $resql5 = $this->db->query($sql5);
         return $resql5;
     }
